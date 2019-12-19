@@ -32,6 +32,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -155,6 +157,9 @@ public class MainActivity extends AppCompatActivity implements
     TextView tv_fixed_add;
     TextView tv_custom;
 
+    private SoundPool sp;//声明一个SoundPool
+    private int music;//定义一个整型用load（）；来设置suondID
+
     int paint_size = 40;
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -163,10 +168,9 @@ public class MainActivity extends AppCompatActivity implements
             switch (v.getId()) {
                 case R.id.take_picture:
                     if (mCameraView != null) {
+                        sp.play(music, 1, 1, 0, 0, 1);
                         mToast = Toast.makeText(MainActivity.this,"图片保存中...",Toast.LENGTH_LONG);
                         mToast.show();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");// HH:mm:ss
-                        Log.d(TAG, "点击的当前日期时间"+simpleDateFormat.format(new Date(System.currentTimeMillis())));
                         mCameraView.takePicture();
                     }
                     break;
@@ -269,7 +273,8 @@ public class MainActivity extends AppCompatActivity implements
         Location location = locationManager.getLastKnownLocation(provider);
         updateWithNewLocation(location);
         locationManager.requestLocationUpdates(provider, 2, 1, locationListener);*/
-
+        sp = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
+        music = sp.load(this, R.raw.takend, 1); //把你的声音素材放到res/raw里，第2个参数即为资源文件，第3个为音乐的优先级
     }
 
   /*  private final LocationListener locationListener = new LocationListener() {
