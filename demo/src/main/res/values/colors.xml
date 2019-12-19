@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2016 The Android Open Source Project
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+         http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<resources>
+    <color name="primary">#3F51B5</color>
+    <color name="primaryDark">#303F9F</color>
+    <color name="accent">#4CAF50</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#727272</color>
+    <color name="badge_color">#FA6503</color>
+
+    <color name="titi_background_color_white_transparent">#00ffffff</color>
+
+    <color name="titi_background_color_white_0">#26ffffff</color>
+    <color name="titi_background_color_blue_0">#1A1231EB</color>
+    <color name="titi_background_color_green_0">#26A9DC5F</color>
+    <color name="titi_background_color_yellow_0">#26FDF83A</color>
+    <color name="titi_background_color_red_0">#26F90D31</color>
+    <color name="titi_background_color_black_0">#26000000</color>
+    <color name="titi_background_color_pruple_0">#26AB68D9</color>
+
+    <color name="titi_background_color_white_1">#22ffffff</color>
+    <color name="titi_background_color_blue_1">#221231EB</color>
+    <color name="titi_background_color_green_1">#22A9DC5F</color>
+    <color name="titi_background_color_yellow_1">#22FDF83A</color>
+    <color name="titi_background_color_red_1">#22F90D31</color>
+    <color name="titi_background_color_black_1">#22000000</color>
+    <color name="titi_background_color_pruple_1">#22AB68D9</color>
+
+    <color name="titi_background_color_white_2">#66ffffff</color>
+    <color name="titi_background_color_blue_2">#661231EB</color>
+    <color name="titi_background_color_green_2">#66A9DC5F</color>
+    <color name="titi_background_color_yellow_2">#66FDF83A</color>
+    <color name="titi_background_color_red_2">#66F90D31</color>
+    <color name="titi_background_color_black_2">#66000000</color>
+    <color name="titi_background_color_pruple_2">#66AB68D9</color>
+
+    <color name="titi_background_color_white_3">#99ffffff</color>
+    <color name="titi_background_color_blue_3">#991231EB</color>
+    <color name="titi_background_color_green_3">#99A9DC5F</color>
+    <color name="titi_background_color_yellow_3">#99FDF83A</color>
+    <color name="titi_background_color_red_3">#99F90D31</color>
+    <color name="titi_background_color_black_3">#99000000</color>
+    <color name="titi_background_color_pruple_3">#99AB68D9</color>
+</resources>
