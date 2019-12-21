@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -56,19 +57,19 @@ public class SetUpActivity extends AppCompatActivity {
     LinearLayout ll_fontcolor_6;
     LinearLayout ll_fontcolor_7;
     //变量参数
-    private boolean b_watermark_switch = true;
-    private boolean b_weather_switch = true;
-    private boolean b_longitude_switch = true;
+    public static boolean b_watermark_switch = true;
+    public static boolean b_weather_switch = true;
+    public static boolean b_longitude_switch = true;
     //private boolean b_altude_switch;//海拔开关
-    private boolean b_add_switch = true;
-    private boolean b_projectname_switch = true;
-    private boolean b_place_switch = true;
-    private boolean b_time_switch = true;
-    private boolean b_custom_switch = false;
-    private int background_color;
-    private int front_color = -1;
-    private int front_size_flag=1;
-    private int background_color_depth_flag=1;
+    public static boolean b_add_switch = true;
+    public static boolean b_projectname_switch = true;
+    public static boolean b_place_switch = true;
+    public static boolean b_time_switch = true;
+    public static boolean b_custom_switch = false;
+    public static int background_color = -1;
+    public static int front_color = -1;
+    public static int front_size_flag=1;
+    public static int background_color_depth_flag=1;
     Switch sh_watermark_switch;
     Switch sh_watermark_weather;
     Switch sh_watermark_longitude;
@@ -119,15 +120,90 @@ public class SetUpActivity extends AppCompatActivity {
         iv_fontcolor_6 = findViewById(R.id.iv_fontcolor_6);
         iv_fontcolor_7 = findViewById(R.id.iv_fontcolor_7);
         sh_watermark_switch       = findViewById(R.id.sh_watermark_switch);
+        sh_watermark_switch.setChecked(b_watermark_switch);
         sh_watermark_weather      = findViewById(R.id.sh_watermark_weather);
+        sh_watermark_weather.setChecked(b_weather_switch);
         sh_watermark_longitude    = findViewById(R.id.sh_watermark_longitude);
+        sh_watermark_longitude.setChecked(b_longitude_switch);
         //sh_watermark_altitude     = findViewById(R.id.sh_watermark_altitude);
         sh_watermark_add          = findViewById(R.id.sh_watermark_add);
+        sh_watermark_add.setChecked(b_add_switch);
         sh_watermark_neighborhood = findViewById(R.id.sh_watermark_neighborhood);
         sh_watermark_projectname  = findViewById(R.id.sh_watermark_projectname);
+        sh_watermark_projectname.setChecked(b_projectname_switch);
         sh_watermark_projectadd   = findViewById(R.id.sh_watermark_projectadd);
+        sh_watermark_projectadd.setChecked(b_place_switch);
         sh_watermark_projecttime  = findViewById(R.id.sh_watermark_projecttime);
+        sh_watermark_projecttime.setChecked(b_time_switch);
         sh_watermark_custom       = findViewById(R.id.sh_watermark_custom);
+        sh_watermark_custom.setChecked(b_custom_switch);
+
+        ll_titlecolor_1 = findViewById(R.id.ll_titlecolor_1);
+        ll_titlecolor_2 = findViewById(R.id.ll_titlecolor_2);
+        ll_titlecolor_3 = findViewById(R.id.ll_titlecolor_3);
+        ll_titlecolor_4 = findViewById(R.id.ll_titlecolor_4);
+        ll_titlecolor_5 = findViewById(R.id.ll_titlecolor_5);
+        ll_titlecolor_6 = findViewById(R.id.ll_titlecolor_6);
+        ll_titlecolor_7 = findViewById(R.id.ll_titlecolor_7);
+        ll_fontcolor_1 = findViewById(R.id.ll_fontcolor_1);
+        ll_fontcolor_2 = findViewById(R.id.ll_fontcolor_2);
+        ll_fontcolor_3 = findViewById(R.id.ll_fontcolor_3);
+        ll_fontcolor_4 = findViewById(R.id.ll_fontcolor_4);
+        ll_fontcolor_5 = findViewById(R.id.ll_fontcolor_5);
+        ll_fontcolor_6 = findViewById(R.id.ll_fontcolor_6);
+        ll_fontcolor_7 = findViewById(R.id.ll_fontcolor_7);
+
+        switch (background_color){
+            case -1:
+            case 0:
+                ll_titlecolor_1.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 1:
+                ll_titlecolor_2.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 2:
+                ll_titlecolor_3.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 3:
+                ll_titlecolor_4.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 4:
+                ll_titlecolor_5.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 5:
+                ll_titlecolor_6.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 6:
+                ll_titlecolor_7.setBackgroundResource(R.drawable.im_frame);
+                break;
+        }
+
+        switch (front_color){
+            case -1:
+            case 0:
+                ll_fontcolor_1.setBackgroundResource(R.drawable.im_frame);
+
+                break;
+            case 1:
+                ll_fontcolor_2.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 2:
+                ll_fontcolor_3.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 3:
+                ll_fontcolor_4.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 4:
+                ll_fontcolor_5.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 5:
+                ll_fontcolor_6.setBackgroundResource(R.drawable.im_frame);
+                break;
+            case 6:
+                ll_fontcolor_7.setBackgroundResource(R.drawable.im_frame);
+                break;
+        }
+
         sh_watermark_switch.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -192,12 +268,23 @@ public class SetUpActivity extends AppCompatActivity {
                     }
                 });
 
-
-
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加返回键
         FontsizeRaeSeekBar frontsize_SeekBar = findViewById(R.id.seekBar_fontsize);
-        BackgoundcolorSeekBar backgroundcolor_SeekBar = findViewById(R.id.seekBar_backgroundcolor);
+        switch (front_size_flag){
+            case 0:
+                frontsize_SeekBar.setProgress(0);
+                break;
+            case 1:
+                frontsize_SeekBar.setProgress(1);
+                break;
+            case 2:
+                frontsize_SeekBar.setProgress(2);
+                break;
+            case 3:
+                frontsize_SeekBar.setProgress(3);
+                break;
+        }
         frontsize_SeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -214,6 +301,21 @@ public class SetUpActivity extends AppCompatActivity {
 
             }
         });
+        BackgoundcolorSeekBar backgroundcolor_SeekBar = findViewById(R.id.seekBar_backgroundcolor);
+        switch (background_color_depth_flag){
+            case 0:
+                backgroundcolor_SeekBar.setProgress(0);
+                break;
+            case 1:
+                backgroundcolor_SeekBar.setProgress(1);
+                break;
+            case 2:
+                backgroundcolor_SeekBar.setProgress(2);
+                break;
+            case 3:
+                backgroundcolor_SeekBar.setProgress(3);
+                break;
+        }
         backgroundcolor_SeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -299,13 +401,7 @@ public class SetUpActivity extends AppCompatActivity {
         });
 
 
-        ll_titlecolor_1 = findViewById(R.id.ll_titlecolor_1);
-        ll_titlecolor_2 = findViewById(R.id.ll_titlecolor_2);
-        ll_titlecolor_3 = findViewById(R.id.ll_titlecolor_3);
-        ll_titlecolor_4 = findViewById(R.id.ll_titlecolor_4);
-        ll_titlecolor_5 = findViewById(R.id.ll_titlecolor_5);
-        ll_titlecolor_6 = findViewById(R.id.ll_titlecolor_6);
-        ll_titlecolor_7 = findViewById(R.id.ll_titlecolor_7);
+
         ll_titlecolor_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -399,13 +495,6 @@ public class SetUpActivity extends AppCompatActivity {
             }
         });
 
-        ll_fontcolor_1 = findViewById(R.id.ll_fontcolor_1);
-        ll_fontcolor_2 = findViewById(R.id.ll_fontcolor_2);
-        ll_fontcolor_3 = findViewById(R.id.ll_fontcolor_3);
-        ll_fontcolor_4 = findViewById(R.id.ll_fontcolor_4);
-        ll_fontcolor_5 = findViewById(R.id.ll_fontcolor_5);
-        ll_fontcolor_6 = findViewById(R.id.ll_fontcolor_6);
-        ll_fontcolor_7 = findViewById(R.id.ll_fontcolor_7);
         ll_fontcolor_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

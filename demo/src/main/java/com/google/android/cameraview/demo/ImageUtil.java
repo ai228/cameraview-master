@@ -754,9 +754,9 @@ public class ImageUtil {
 		canvas.drawText(str_weather, paddingLeft, paddingBottom-7*h, paint);
 		canvas.drawText(str_longitude, paddingLeft, paddingBottom-6*h, paint);
 		canvas.drawText(str_latitude, paddingLeft, paddingBottom-5*h, paint);
-		if (str_add.length()>10){
-            String substring_front= str_add.substring(0,10);
-			String substring_end = str_add.substring(10);
+		if (str_add.length()>12){
+            String substring_front= str_add.substring(0,12);
+			String substring_end = str_add.substring(12);
             canvas.drawText("地       址："+substring_front, paddingLeft, paddingBottom-4*h, paint);
             canvas.drawText("                   "+substring_end, paddingLeft, paddingBottom-3*h, paint);
             canvas.drawText(str_projectname, paddingLeft, paddingBottom-2*h, paint);
