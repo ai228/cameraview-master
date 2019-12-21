@@ -27,12 +27,11 @@
         android:layout_height="wrap_content"
         android:theme="@style/Theme.Demo.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <com.google.android.cameraview.demo.SimpleToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#FC6408"
-
             app:popupTheme="@style/Theme.Demo.PopupOverlay"
             app:title="水印设置"/>
 

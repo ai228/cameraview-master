@@ -16,7 +16,7 @@
 
 package com.google.android.cameraview.demo;
 
-import static android.support.constraint.Constraints.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,12 +31,11 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
-import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Base64;
 import android.util.Log;
@@ -63,6 +62,8 @@ import java.util.Date;
  */
 @SuppressLint("SimpleDateFormat")
 public class ImageUtil {
+	private static Paint mPaint;
+
 	/**
 	 * 图片压缩，按比例大小压缩方法
 	 *
@@ -614,58 +615,145 @@ public class ImageUtil {
 	 * @return
 	 */
 	public static Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,String str_weather,String str_longitude,String str_latitude,String str_altitude,String str_add,
-			String str_projectname,String str_place,String str_time,Paint paint, int paddingLeft, int paddingBottom) {
+			String str_projectname,String str_place,String str_time,Paint paint, int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
 //		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //		paint.setColor(color);
 //		paint.setTextSize(dp2px(context, paintSize));
 //		Rect bounds = new Rect();
 //		paint.getTextBounds(text, 0, text.length(), bounds);
-		return drawTextToBitmap(context,bitmap, str_weather,str_longitude,str_latitude,str_altitude,str_add,str_projectname, str_place,str_time, paint,dp2px(context, paddingLeft),bitmap.getHeight() - dp2px(context, paddingBottom));
+		return drawTextToBitmap(context,bitmap, str_weather,str_longitude,str_latitude,str_altitude,str_add,str_projectname, str_place,str_time, paint,dp2px(context, paddingLeft),bitmap.getHeight() - dp2px(context, paddingBottom),background_color_depth,background_color);
 	}
-
-	/**
-	 * 绘制文字到中间
-	 * @param context
-	 * @param bitmap
-	 * @return
-	 */
-//	public static Bitmap drawTextToCenter(Context context, Bitmap bitmap, String text,
-//										  int size, int color) {
-//		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//		paint.setColor(color);
-//		paint.setTextSize(dp2px(context, size));
-//		Rect bounds = new Rect();
-//		paint.getTextBounds(text, 0, text.length(), bounds);
-//		return drawTextToBitmap(context, bitmap, text, paint, bounds,
-//				(bitmap.getWidth() - bounds.width()) / 2,
-//				(bitmap.getHeight() + bounds.height()) / 2);
-//	}
-
 
 	//图片上绘制文字
 	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap, String str_weather,String str_longitude,String str_latitude,String str_altitude,String str_add,
-			String str_projectname,String str_place,String str_time,Paint paint,int paddingLeft, int paddingBottom) {
+			String str_projectname,String str_place,String str_time,Paint paint,int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
 		Config bitmapConfig = bitmap.getConfig();
-		paint.setDither(true); // 获取跟清晰的图像采样
+		paint.setDither(true); // 获取清晰的图像采样
 		paint.setFilterBitmap(true);// 过滤一些
 		if (bitmapConfig == null) {
 			bitmapConfig = Config.ARGB_8888;
 		}
 		bitmap = bitmap.copy(bitmapConfig, true);
 		Canvas canvas = new Canvas(bitmap);
-
 		Rect rect = new Rect();
 		paint.getTextBounds(str_weather, 0, str_weather.length(), rect);
 		int h = rect.height()+15;//行与行之间的间距
 		Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint_title.setColor(Color.rgb(252, 100, 8));
-		paint_title.setTextSize(dp2px(context, 60));
+		paint_title.setTextSize(context.getResources().getDimension(R.dimen.px_180));
 		canvas.drawText("电企通相机", paddingLeft+20, dp2px(context, 150), paint_title);
+		mPaint = new Paint();
+		//paint.setStyle(Style.STROKE);//空心矩形框
+		mPaint.setStyle(Paint.Style.FILL);//实心矩形框
+	 
+	   switch (background_color_depth) {
+            case 0:
+                mPaint.setColor(
+						context.getResources().getColor(R.color.titi_background_color_white_transparent));
+                break;
+            case 1:
+                switch (background_color) {
+                    case 0:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_white_1));
+                        break;
+                    case 1:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_blue_1));
+                        break;
+                    case 2:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_green_1));
+                        break;
+                    case 3:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_yellow_1));
+                        break;
+                    case 4:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_red_1));
+                        break;
+                    case 5:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_black_1));
+                        break;
+                    case 6:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_pruple_1));
+                        break;
+                }
+                break;
+            case 2:
 
+                switch (background_color) {
+                    case 0:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_white_2));
+                        break;
+                    case 1:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_blue_2));
+                        break;
+                    case 2:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_green_2));
+                        break;
+                    case 3:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_yellow_2));
+                        break;
+                    case 4:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_red_2));
+                        break;
+                    case 5:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_black_2));
+                        break;
+                    case 6:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_pruple_2));
+                        break;
+                }
+                break;
+            case 3:
+                switch (background_color) {
+                    case 0:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_white_3));
+                        break;
+                    case 1:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_blue_3));
+                        break;
+                    case 2:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_green_3));
+                        break;
+                    case 3:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_yellow_3));
+                        break;
+                    case 4:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_red_3));
+                        break;
+                    case 5:
+                        mPaint.setColor(
+								context.getResources().getColor(R.color.titi_background_color_black_3));
+                        break;
+                    case 6:
+                        mPaint.setColor(
+                                context.getResources().getColor(R.color.titi_background_color_pruple_3));
+                        break;
+                }
+                break;
+        }
+        Log.d(TAG, "drawTextToBitmap: "+(paddingLeft-10)+"+++++"+(paddingBottom-7*h-10));
+		canvas.drawRect(new RectF(paddingLeft-10, paddingBottom-8*h-(context.getResources().getDimension(R.dimen.px_20)), 4*(bitmap.getWidth()/5), paddingBottom+context.getResources().getDimension(R.dimen.px_20)), mPaint);
 		canvas.drawText(str_weather, paddingLeft, paddingBottom-7*h, paint);
 		canvas.drawText(str_longitude, paddingLeft, paddingBottom-6*h, paint);
 		canvas.drawText(str_latitude, paddingLeft, paddingBottom-5*h, paint);
-		//canvas.drawText(str_altitude, paddingLeft, paddingBottom-4*h, paint);
 		if (str_add.length()>10){
             String substring_front= str_add.substring(0,10);
 			String substring_end = str_add.substring(10);
@@ -680,14 +768,6 @@ public class ImageUtil {
             canvas.drawText(str_place, paddingLeft, paddingBottom-2*h, paint);
             canvas.drawText(str_time, paddingLeft, paddingBottom-1*h, paint);
         }
-
-//        canvas.drawText(str_weather, paddingLeft, paddingBottom, paint);
-//        canvas.drawText(str_longitude, paddingLeft, paddingBottom-6*h, paint);
-//		canvas.drawText(str_altitude, paddingLeft, paddingBottom-5*h, paint);
-//		canvas.drawText(str_add, paddingLeft, paddingBottom-4*h, paint);
-//		canvas.drawText(str_projectname, paddingLeft, paddingBottom-3*h, paint);
-//		canvas.drawText(str_place, paddingLeft, paddingBottom-2*h, paint);
-//		canvas.drawText(str_time, paddingLeft, paddingBottom-h, paint);
 		return bitmap;
 	}
 

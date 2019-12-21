@@ -19,7 +19,6 @@ package com.google.android.cameraview.demo;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +40,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -78,7 +76,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -86,11 +83,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-
-/**
- * This demo app saves the taken picture to a constant file.
- * $ adb pull /sdcard/Android/data/com.google.android.cameraview.demo/files/Pictures/picture.jpg
- */
 public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback,
         AspectRatioFragment.Listener {
@@ -231,9 +223,6 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
-
-//        tv_projectName.setText("工作名称：xxxxxx");
-//        tv_projectAdd.setText("施工地点：xxxxxx");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time= sdf.format( new Date());
         str_time = "时        间："+time;
@@ -248,96 +237,15 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
         //经纬度和地址显示
         getLocation();
-       /* boolean oPen = isOPen(this);
-        if (!oPen){
-            //若未开启gps
-            openGPS(this);
-        }
-        LocationManager locationManager;
-        String serviceName = Context.LOCATION_SERVICE;
-        locationManager = (LocationManager) getSystemService(serviceName);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        String provider = locationManager.getBestProvider(criteria, true);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-        updateWithNewLocation(location);
-        locationManager.requestLocationUpdates(provider, 2, 1, locationListener);*/
         sp = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
         music = sp.load(this, R.raw.takend, 1); //把你的声音素材放到res/raw里，第2个参数即为资源文件，第3个为音乐的优先级
     }
 
-  /*  private final LocationListener locationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            updateWithNewLocation(location);
-        }
 
-        public void onProviderDisabled(String provider) {
-            updateWithNewLocation(null);
-        }
 
-        public void onProviderEnabled(String provider) {
-        }
 
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    };*/
-
-    private void updateWithNewLocation(Location location) {
-        String latLongString;
-//                try {
-//                        Thread.sleep(0);//因为真机获取gps数据需要一定的时间，为了保证获取到，采取系统休眠的延迟方法
-//                } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                        throw new RuntimeException(e);
-//                }
-
-        if (location != null) {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-            Geocoder geocoder=new Geocoder(this);
-            List places = null;
-
-            try {
-                places = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-                //Toast.makeText(this, places.size()+"", Toast.LENGTH_LONG).show();
-                System.out.println(places.size()+"");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String placename = "";
-            if (places != null && places.size() > 0) {
-                // placename=((Address)places.get(0)).getLocality();
-                //一下的信息将会具体到某条街
-                //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
-                placename = ((Address) places.get(0)).getAddressLine(0) + ", " + System.getProperty("line.separator")
-                        + ((Address) places.get(0)).getAddressLine(1) + ", "
-                        + ((Address) places.get(0)).getAddressLine(2);
-            }
-            latLongString = "纬度:" + lat + "/n经度:" + lng;
-            project_logitude.setText("经       度："+lng);
-            project_latitue.setText("纬       度："+lat);
-            //myLocationText.setText("您当前的位置是:/n" + latLongString+"\n"+placename);
-            //Toast.makeText(this, placename, Toast.LENGTH_LONG).show();
-        } else {
-            latLongString = "无法获取地理信息";
-            project_logitude.setText("经       度："+lng);
-            project_latitue.setText("纬       度："+lat);
-            Toast.makeText(this, latLongString, Toast.LENGTH_LONG).show();
-        }
-        // myLocationText.setText("您当前的位置是:/n" + latLongString);
-    }
 
     @Override
     protected void onResume() {
@@ -440,23 +348,25 @@ public class MainActivity extends AppCompatActivity implements
             paint.setColor(front_color);
             switch (front_size){
                 case 0:
-                    paint_size = 35;
+                    paint_size = (int) getResources().getDimension(R.dimen.px_60);
                     break;
                 case 1:
-                    paint_size = 40;
+                    paint_size = (int) getResources().getDimension(R.dimen.px_70);
                     break;
                 case 2:
-                    paint_size = 45;
+                    paint_size = (int) getResources().getDimension(R.dimen.px_80);
                     break;
                 case 3:
-                    paint_size = 50;
+                    paint_size = (int) getResources().getDimension(R.dimen.px_90);
                     break;
             }
-            paint.setTextSize(dp2px(MainActivity.this, paint_size));
+            Log.d(TAG, "onPictureTaken: "+paint_size+"");
+            paint.setTextSize(paint_size);
             //getResources().getDimension(R.dimen.px_68)
             Bitmap toLeftBottom1 = ImageUtil.drawTextToLeftBottom(MainActivity.this, bitmap,
                     str_weather, str_longitude, str_latitude, "海拔", str_add,
-                    str_projectname, str_place, str_time, paint,20, 200);
+                    str_projectname, str_place, str_time, paint,
+                    (int) getResources().getDimension(R.dimen.px_15),  (int) getResources().getDimension(R.dimen.px_80),background_color_depth,background_color);
           // imageView.setImageBitmap(toLeftBottom1);
             //saveImage(toLeftBottom1);
             //saveImageToGallery(toLeftBottom1);
@@ -661,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements
         if (data != null) {
             background_color = data.getExtras().getInt("background_color");  
             front_color = data.getExtras().getInt("front_color");
-            str_projectname = "项目名称：" + data.getExtras().getString("name");
+            str_projectname = "工程名称：" + data.getExtras().getString("name");
             str_place = "施工地点：" + data.getExtras().getString("add");  
             str_time = "时        间：" + data.getExtras().getString("time");  
             front_size = data.getExtras().getInt("front_size");  
@@ -750,48 +660,52 @@ public class MainActivity extends AppCompatActivity implements
     private void setFrontSize() {
         switch (front_size) {
             case 0:
-                project_weather.setTextSize(dp2px(this,7));
-                project_logitude.setTextSize(dp2px(this,7));
-                project_latitue.setTextSize(dp2px(this,7));
-                project_altitude.setTextSize(dp2px(this,7));
-                tv_fixed_add.setTextSize(dp2px(this,7));
-                tv_projectAdd.setTextSize(dp2px(this,7));
-                tv_projectName.setTextSize(dp2px(this,7));
-                project_place.setTextSize(dp2px(this,7));
-                project_time.setTextSize(dp2px(this,7));
+                float dimension = getResources().getDimension(R.dimen.px_7);
+                project_weather.setTextSize(dimension);
+                project_logitude.setTextSize(dimension);
+                project_latitue.setTextSize(dimension);
+                project_altitude.setTextSize(dimension);
+                tv_fixed_add.setTextSize(dimension);
+                tv_projectAdd.setTextSize(dimension);
+                tv_projectName.setTextSize(dimension);
+                project_place.setTextSize(dimension);
+                project_time.setTextSize(dimension);
                 break;
             case 1:
-                project_weather.setTextSize(dp2px(this,8));
-                project_logitude.setTextSize(dp2px(this,8));
-                project_latitue.setTextSize(dp2px(this,8));
-                project_altitude.setTextSize(dp2px(this,8));
-                tv_fixed_add.setTextSize(dp2px(this,8));
-                tv_projectAdd.setTextSize(dp2px(this,8));
-                tv_projectName.setTextSize(dp2px(this,8));
-                project_place.setTextSize(dp2px(this,8));
-                project_time.setTextSize(dp2px(this,8));
+                float dimension1 = getResources().getDimension(R.dimen.px_8);
+                project_weather.setTextSize(dimension1);
+                project_logitude.setTextSize(dimension1);
+                project_latitue.setTextSize(dimension1);
+                project_altitude.setTextSize(dimension1);
+                tv_fixed_add.setTextSize(dimension1);
+                tv_projectAdd.setTextSize(dimension1);
+                tv_projectName.setTextSize(dimension1);
+                project_place.setTextSize(dimension1);
+                project_time.setTextSize(dimension1);
                 break;
             case 2:
-                project_weather.setTextSize(dp2px(this,9));
-                project_logitude.setTextSize(dp2px(this,9));
-                project_latitue.setTextSize(dp2px(this,9));
-                project_altitude.setTextSize(dp2px(this,9));
-                tv_fixed_add.setTextSize(dp2px(this,9));
-                tv_projectAdd.setTextSize(dp2px(this,9));
-                tv_projectName.setTextSize(dp2px(this,9));
-                project_place.setTextSize(dp2px(this,9));
-                project_time.setTextSize(dp2px(this,9));
+                float dimension2 = getResources().getDimension(R.dimen.px_9);
+                project_weather.setTextSize(dimension2);
+                project_logitude.setTextSize(dimension2);
+                project_latitue.setTextSize(dimension2);
+                project_altitude.setTextSize(dimension2);
+                tv_fixed_add.setTextSize(dimension2);
+                tv_projectAdd.setTextSize(dimension2);
+                tv_projectName.setTextSize(dimension2);
+                project_place.setTextSize(dimension2);
+                project_time.setTextSize(dimension2);
                 break;
             case 3:
-                project_weather.setTextSize(dp2px(this,10));
-                project_logitude.setTextSize(dp2px(this,10));
-                project_latitue.setTextSize(dp2px(this,10));
-                project_altitude.setTextSize(dp2px(this,10));
-                tv_fixed_add.setTextSize(dp2px(this,10));
-                tv_projectAdd.setTextSize(dp2px(this,10));
-                tv_projectName.setTextSize(dp2px(this,10));
-                project_place.setTextSize(dp2px(this,10));
-                project_time.setTextSize(dp2px(this,10));
+                float dimension3 = getResources().getDimension(R.dimen.px_10);
+                project_weather.setTextSize(dimension3);
+                project_logitude.setTextSize(dimension3);
+                project_latitue.setTextSize(dimension3);
+                project_altitude.setTextSize(dimension3);
+                tv_fixed_add.setTextSize(dimension3);
+                tv_projectAdd.setTextSize(dimension3);
+                tv_projectName.setTextSize(dimension3);
+                project_place.setTextSize(dimension3);
+                project_time.setTextSize(dimension3);
                 break;
         }
     }
@@ -801,36 +715,6 @@ public class MainActivity extends AppCompatActivity implements
             case 0:
                 ll_titile_background.setBackgroundColor(
                         getResources().getColor(R.color.titi_background_color_white_transparent));
-                /*switch (background_color) {
-                    case 0:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_white_0));
-                        break;
-                    case 1:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_blue_0));
-                        break;
-                    case 2:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_green_0));
-                        break;
-                    case 3:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_yellow_0));
-                        break;
-                    case 4:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_red_0));
-                        break;
-                    case 5:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_black_0));
-                        break;
-                    case 6:
-                        ll_titile_background.setBackgroundColor(
-                                getResources().getColor(R.color.titi_background_color_pruple_0));
-                        break;
-                }*/
                 break;
             case 1:
                 switch (background_color) {
@@ -1015,7 +899,7 @@ public class MainActivity extends AppCompatActivity implements
                 Location location = locationManager.getLastKnownLocation(locationProvider);
                 if (location != null) {
                     //输入经纬度
-                    Toast.makeText(this, location.getLongitude() + " " + location.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this, location.getLongitude() + " " + location.getLatitude() + "", Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
@@ -1030,13 +914,10 @@ public class MainActivity extends AppCompatActivity implements
                     Location location = locationManager.getLastKnownLocation(locationProvider);
                     if (location != null) {
                         //不为空,显示地理位置经纬度
-                        //Toast.makeText(this, location.getLongitude() + " " + location.getLatitude() + "", Toast.LENGTH_SHORT).show();
                         Geocoder geocoder=new Geocoder(MainActivity.this);
                         List places = null;
                         try {
                             places = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-                            //Toast.makeText(MainActivity.this, places.size()+"", Toast.LENGTH_LONG).show();
-                            //System.out.println(places.size()+"");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1053,13 +934,9 @@ public class MainActivity extends AppCompatActivity implements
                             String str2 =((Address) places.get(0)).getAddressLine(1) + "" ;
                             String str3 = ((Address) places.get(0)).getAddressLine(2) + "" ;
                             mLocality = ((Address) places.get(0)).getLocality();
-                            Log.d(TAG, "str1: "+str1);
-                            Log.d(TAG, "str2: "+str2);
                             str_add = str1+str3;
-                            Log.d(TAG, "str_add: "+str_add);
                         }
                         //不为空,显示地理位置经纬度
-                        //Toast.makeText(MainActivity.this,  "city:"+placename, Toast.LENGTH_SHORT).show();
                         tv_projectAdd.setText(str_add);
                     }
                     break;
@@ -1094,46 +971,21 @@ public class MainActivity extends AppCompatActivity implements
                 Geocoder geocoder = new Geocoder(MainActivity.this);
                 List places = null;
                 try {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                          /*  myHandler.sendEmptyMessage(0); //其实内部实现还是和上面一样
-                            endEmptyMessageAtTime(int what, long uptimeMillis); //定时发送空消息
-                            sendEmptyMessageDelayed(int what, long delayMillis); //延时发送空消息
-                            sendMessageAtTime(Message msg, long uptimeMillis); //定时发送消息
-                            sendMessageDelayed(Message msg, long delayMillis); //延时发送消息*/
-                            //需要在子线程中处理的逻辑
-                            if (location != null) {
 
-                                Address tempAddress = getAddress(MainActivity.this,location.getLatitude(),location.getLongitude());
-                                String str1 = tempAddress.getAddressLine(0);
-                                String str2 = tempAddress.getAddressLine(2);
-                                String addressLine = str1+str2;
-                                Log.d(TAG, "run: "+addressLine);
+                    Address tempAddress = getAddress(MainActivity.this,location.getLatitude(),location.getLongitude());
+                    String str1 = tempAddress.getAddressLine(0);
+                    String str2 = tempAddress.getAddressLine(2);
+                    String addressLine = str1+str2;
 
-                                Looper.prepare();
-                                //更新UI等
-                                tv_projectAdd.setText(addressLine);
-                              /*  //需要数据传递，用下面方法；
-                                Message msg =new Message();
-                                msg.obj = addressLine;//可以是基本类型，可以是对象，可以是List、map等；
-                                myHandler.sendMessage(msg);
-                                //耗时操作，完成之后发送消息给Handler，完成UI更新；
-                                myHandler.sendEmptyMessage(0);*/
-                                Looper.loop();
-                            }
-                        }
-                    }.start();
+                    //更新UI等
+                    tv_projectAdd.setText(addressLine);
                     places = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-                    //Toast.makeText(MainActivity.this, places.size()+"", Toast.LENGTH_LONG).show();
-                    //System.out.println(places.size()+"");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 String placename = "";
                 if (places != null && places.size() > 0) {
-                    // placename=((Address)places.get(0)).getLocality();
                     //一下的信息将会具体到某条街
                     //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
                     placename = ((Address) places.get(0)).getAddressLine(0) + ""
@@ -1142,30 +994,26 @@ public class MainActivity extends AppCompatActivity implements
                     mLocality = ((Address) places.get(0)).getLocality();
                 }
                 //不为空,显示地理位置经纬度
-                //Toast.makeText(MainActivity.this,  "city:"+placename, Toast.LENGTH_SHORT).show();
                 tv_projectAdd.setText(placename);
-                //getServiceInfo(HTTP_PRE+"mLocality");
                 UrlHttpUtil.get(HTTP_PRE + "娄底", new CallBackUtil.CallBackString() {
                     @Override
                     public void onFailure(int code, String errorMessage) {
-                        Log.d(TAG, "onResponse: "+errorMessage);
+
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, "onResponse: "+response);
-
                         JSONObject  dataJson = null;
                         try {
                             dataJson = new JSONObject(response);
                             JSONObject  response1 = dataJson.getJSONObject("data");
                             JSONArray data = response1.getJSONArray("forecast");
                             JSONObject info=data.getJSONObject(0);
-                            String high=info.getString("high");
-                            String low=info.getString("low");
+                            String high=info.getString("high").substring(2);
+                            String low=info.getString("low").substring(2);
                             String type=info.getString("type");
                             String fengxiang=info.getString("fengxiang");
-                            str_weather = "天       气："+type+","+low+high+","+fengxiang;
+                            str_weather = "天       气："+type+","+fengxiang+","+low+"~"+high;
                             project_weather.setText(str_weather);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1204,13 +1052,10 @@ public class MainActivity extends AppCompatActivity implements
                         Location location = locationManager.getLastKnownLocation(locationProvider);
                         if (location != null) {
                             //不为空,显示地理位置经纬度
-                            //Toast.makeText(MainActivity.this, location.getLongitude() + " " + location.getLatitude() + "", Toast.LENGTH_SHORT).show();
                             Geocoder geocoder=new Geocoder(MainActivity.this);
                             List places = null;
                             try {
                                 places = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-                                //Toast.makeText(MainActivity.this, places.size()+"", Toast.LENGTH_LONG).show();
-                                //System.out.println(places.size()+"");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1237,17 +1082,6 @@ public class MainActivity extends AppCompatActivity implements
                     finish();
                 }
                 break;
-
-          /*  case REQUEST_CAMERA_PERMISSION:
-                if (permissions.length != 1 || grantResults.length != 1) {
-                    throw new RuntimeException("Error on requesting camera permission.");
-                }
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.camera_permission_not_granted,
-                            Toast.LENGTH_SHORT).show();
-                }
-                // No need to start camera here; it is handled by onResume
-                break;*/
         }
     }
 

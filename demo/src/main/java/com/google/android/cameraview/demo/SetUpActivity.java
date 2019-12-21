@@ -22,7 +22,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -63,7 +62,7 @@ public class SetUpActivity extends AppCompatActivity {
     //private boolean b_altude_switch;//海拔开关
     private boolean b_add_switch = true;
     private boolean b_projectname_switch = true;
-    private boolean b_place_switch;
+    private boolean b_place_switch = true;
     private boolean b_time_switch = true;
     private boolean b_custom_switch = false;
     private int background_color;
@@ -194,8 +193,9 @@ public class SetUpActivity extends AppCompatActivity {
                 });
 
 
+
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加返回键
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加返回键
         FontsizeRaeSeekBar frontsize_SeekBar = findViewById(R.id.seekBar_fontsize);
         BackgoundcolorSeekBar backgroundcolor_SeekBar = findViewById(R.id.seekBar_backgroundcolor);
         frontsize_SeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -230,6 +230,44 @@ public class SetUpActivity extends AppCompatActivity {
 
             }
         });
+
+        SimpleToolbar  simpleToolbar = findViewById(R.id.toolbar);
+        simpleToolbar.setLeftTitleClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        simpleToolbar.setRightTitleClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                //把返回数据存入Intent
+                String name = et_projectName.getText().toString();
+                String add = et_projectAdd.getText().toString();
+                String time = et_projectTime.getText().toString();
+                intent.putExtra("background_color",background_color);
+                intent.putExtra("front_color",front_color);
+                intent.putExtra("name", name);
+                intent.putExtra("add", add);
+                intent.putExtra("time", time);
+                intent.putExtra("b_watermark_switch",b_watermark_switch);
+                intent.putExtra("b_weather_switch",b_weather_switch);
+                intent.putExtra("b_longitude_switch",b_longitude_switch);
+                intent.putExtra("b_add_switch",b_add_switch);
+                intent.putExtra("b_projectname_switch",b_projectname_switch);
+                intent.putExtra("b_place_switch",b_place_switch);
+                intent.putExtra("b_time_switch",b_time_switch);
+                intent.putExtra("b_custom_switch",b_custom_switch);
+                intent.putExtra("front_size",front_size_flag);
+                intent.putExtra("background_color_depth",background_color_depth_flag);
+                //设置返回数据
+                SetUpActivity.this.setResult(RESULT_OK, intent);
+                //关闭Activity
+                SetUpActivity.this.finish();
+            }
+        });
+
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
