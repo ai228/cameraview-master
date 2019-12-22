@@ -133,13 +133,13 @@ public class MainActivity extends AppCompatActivity implements
     private int front_size = 0;
     private int background_color_depth = 1;
 
-    private String str_weather = "天       气：";
-    private String str_longitude = "经       度：";
-    private String str_latitude = "纬       度：";
+    private String str_weather = "天         气：";
+    private String str_longitude = "经         度：";
+    private String str_latitude = "纬         度：";
     private String str_add = "";
     private String str_projectname = "工程名称：(待写)";
     private String str_place = "施工地点：(待写)";
-    private String str_time = "时       间：";
+    private String str_time = "时         间：";
 
     LinearLayout ll_titile_background;
     LinearLayout ll_add;
@@ -368,6 +368,10 @@ public class MainActivity extends AppCompatActivity implements
             Log.d(TAG, "onPictureTaken: "+paint_size+"");
             paint.setTextSize(paint_size);
             list_keyword.clear();
+            if (b_projectname_switch)
+                list_keyword.add(str_projectname);
+            if (b_place_switch)
+                list_keyword.add(str_place);
             if (b_weather_switch)
                 list_keyword.add(str_weather);
             if (b_longitude_switch){
@@ -376,10 +380,6 @@ public class MainActivity extends AppCompatActivity implements
             }
             if (b_add_switch)
                 list_keyword.add("^_^"+str_add);
-            if (b_projectname_switch)
-                list_keyword.add(str_projectname);
-            if (b_place_switch)
-                list_keyword.add(str_place);
             if (b_time_switch)
                 list_keyword.add(str_time);
             if (!b_watermark_switch)
@@ -983,9 +983,9 @@ public class MainActivity extends AppCompatActivity implements
             if (location != null) {
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
-                str_longitude = "经       度："+lng;
+                str_longitude = "经         度："+lng;
                 project_logitude.setText(str_longitude);
-                str_latitude = "纬       度："+lat;
+                str_latitude = "纬         度："+lat;
                 project_latitue.setText(str_latitude);
                 Geocoder geocoder = new Geocoder(MainActivity.this);
                 List places = null;
@@ -1032,7 +1032,7 @@ public class MainActivity extends AppCompatActivity implements
                             String low=info.getString("low").substring(2);
                             String type=info.getString("type");
                             String fengxiang=info.getString("fengxiang");
-                            str_weather = "天       气："+type+","+fengxiang+","+low+" ~"+high;
+                            str_weather = "天         气："+type+","+fengxiang+","+low+" ~"+high;
                             project_weather.setText(str_weather);
                         } catch (JSONException e) {
                             e.printStackTrace();
