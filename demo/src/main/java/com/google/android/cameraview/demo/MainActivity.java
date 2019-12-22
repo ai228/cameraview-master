@@ -78,6 +78,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -118,18 +119,18 @@ public class MainActivity extends AppCompatActivity implements
 
     private Handler mBackgroundHandler;
     //变量参数
-    private boolean b_watermark_switch;
-    private boolean b_weather_switch;
-    private boolean b_longitude_switch;
-    private boolean b_add_switch;
-    private boolean b_projectname_switch;
-    private boolean b_place_switch;
-    private boolean b_time_switch;
-    private boolean b_custom_switch;
+    private boolean b_watermark_switch=true;
+    private boolean b_weather_switch=true;
+    private boolean b_longitude_switch=true;
+    private boolean b_add_switch=true;
+    private boolean b_projectname_switch=true;
+    private boolean b_place_switch=true;
+    private boolean b_time_switch=true;
+    private boolean b_custom_switch=true;
 
-    private int background_color;
+    private int background_color =0;
     private int front_color = -1;
-    private int front_size;
+    private int front_size = 0;
     private int background_color_depth = 1;
 
     private String str_weather = "天       气：";
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements
     private String locationProvider = null;
     private String mLocality;
     private Toast mToast;
+    private List<String> list_keyword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String time= sdf.format( new Date());
         str_time = "时        间："+time;
         project_time.setText(str_time); //更新时间
@@ -233,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements
                 Intent setUpActivity = new Intent(MainActivity.this, SetUpActivity.class);
                 setUpActivity.putExtra("str_projectname",str_projectname.substring(5));
                 setUpActivity.putExtra("str_place",str_place.substring(5));
+
                 startActivityForResult(setUpActivity, 0);
             }
         });
@@ -241,6 +244,8 @@ public class MainActivity extends AppCompatActivity implements
         getLocation();
         sp = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
         music = sp.load(this, R.raw.takend, 1); //把你的声音素材放到res/raw里，第2个参数即为资源文件，第3个为音乐的优先级
+
+        list_keyword =  new ArrayList<String>();
     }
 
 
@@ -348,26 +353,41 @@ public class MainActivity extends AppCompatActivity implements
             paint.setColor(front_color);
             switch (front_size){
                 case 0:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_60);
+                    paint_size = (int) getResources().getDimension(R.dimen.px_65);
                     break;
                 case 1:
                     paint_size = (int) getResources().getDimension(R.dimen.px_70);
                     break;
                 case 2:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_80);
+                    paint_size = (int) getResources().getDimension(R.dimen.px_75);
                     break;
                 case 3:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_90);
+                    paint_size = (int) getResources().getDimension(R.dimen.px_80);
                     break;
             }
             Log.d(TAG, "onPictureTaken: "+paint_size+"");
             paint.setTextSize(paint_size);
-            //getResources().getDimension(R.dimen.px_68)
+            list_keyword.clear();
+            if (b_weather_switch)
+                list_keyword.add(str_weather);
+            if (b_longitude_switch){
+                list_keyword.add(str_longitude);
+                list_keyword.add(str_latitude);
+            }
+            if (b_add_switch)
+                list_keyword.add("^_^"+str_add);
+            if (b_projectname_switch)
+                list_keyword.add(str_projectname);
+            if (b_place_switch)
+                list_keyword.add(str_place);
+            if (b_time_switch)
+                list_keyword.add(str_time);
+            if (!b_watermark_switch)
+                list_keyword.clear();
             Bitmap toLeftBottom1 = ImageUtil.drawTextToLeftBottom(MainActivity.this, bitmap,
-                    str_weather, str_longitude, str_latitude, "海拔", str_add,
-                    str_projectname, str_place, str_time, paint,
-                    (int) getResources().getDimension(R.dimen.px_15),  (int) getResources().getDimension(R.dimen.px_80),background_color_depth,background_color);
-          // imageView.setImageBitmap(toLeftBottom1);
+                    list_keyword,
+                    paint,(int) getResources().getDimension(R.dimen.px_20), (int) getResources().getDimension(R.dimen.px_100),background_color_depth,background_color);
+            // imageView.setImageBitmap(toLeftBottom1);
             //saveImage(toLeftBottom1);
             //saveImageToGallery(toLeftBottom1);
             saveImageToGallery_test(toLeftBottom1);
@@ -526,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //文件名为时间
         long timeStamp = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String sd = sdf.format(new Date(timeStamp));
         String fileName = sd + ".jpg";
 
@@ -558,7 +578,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
-
 
     /**
      * 为了得到传回的数据，必须在前面的Activity中（指MainActivity类）重写onActivityResult方法
@@ -1013,7 +1032,7 @@ public class MainActivity extends AppCompatActivity implements
                             String low=info.getString("low").substring(2);
                             String type=info.getString("type");
                             String fengxiang=info.getString("fengxiang");
-                            str_weather = "天       气："+type+","+fengxiang+","+low+"~"+high;
+                            str_weather = "天       气："+type+","+fengxiang+","+low+" ~"+high;
                             project_weather.setText(str_weather);
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -49,13 +49,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 //import sun.misc.BASE64Decoder;
 
 /**
  *
  *
- * 类名:ImageUtil.java 作者： 许 创建时间：2014-11-1 说明:图片处理工具类.
+ * 类名:ImageUtil.java 作者： 邓
+ * 创建时间：2019-11-1 说明:图片处理工具类.
  *
  * 修改时间： 修改者： 修改说明：
  *
@@ -614,19 +616,21 @@ public class ImageUtil {
 	 * @param paddingBottom
 	 * @return
 	 */
-	public static Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,String str_weather,String str_longitude,String str_latitude,String str_altitude,String str_add,
-			String str_projectname,String str_place,String str_time,Paint paint, int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
+	public static Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,
+            List<String> list_keywords,
+            Paint paint, int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
 //		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //		paint.setColor(color);
 //		paint.setTextSize(dp2px(context, paintSize));
 //		Rect bounds = new Rect();
 //		paint.getTextBounds(text, 0, text.length(), bounds);
-		return drawTextToBitmap(context,bitmap, str_weather,str_longitude,str_latitude,str_altitude,str_add,str_projectname, str_place,str_time, paint,dp2px(context, paddingLeft),bitmap.getHeight() - dp2px(context, paddingBottom),background_color_depth,background_color);
+		return drawTextToBitmap(context,bitmap, list_keywords, paint,dp2px(context, paddingLeft),bitmap.getHeight() - dp2px(context, paddingBottom),background_color_depth,background_color);
 	}
 
 	//图片上绘制文字
-	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap, String str_weather,String str_longitude,String str_latitude,String str_altitude,String str_add,
-			String str_projectname,String str_place,String str_time,Paint paint,int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
+	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap,
+            List<String> list_keywords,
+            Paint paint,int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
 		Config bitmapConfig = bitmap.getConfig();
 		paint.setDither(true); // 获取清晰的图像采样
 		paint.setFilterBitmap(true);// 过滤一些
@@ -635,139 +639,148 @@ public class ImageUtil {
 		}
 		bitmap = bitmap.copy(bitmapConfig, true);
 		Canvas canvas = new Canvas(bitmap);
+        Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint_title.setColor(Color.rgb(252, 100, 8));
+        paint_title.setTextSize(context.getResources().getDimension(R.dimen.px_180));
+        canvas.drawText("电企通相机", paddingLeft+20, dp2px(context, 150), paint_title);
 		Rect rect = new Rect();
-		paint.getTextBounds(str_weather, 0, str_weather.length(), rect);
-		int h = rect.height()+15;//行与行之间的间距
-		Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint_title.setColor(Color.rgb(252, 100, 8));
-		paint_title.setTextSize(context.getResources().getDimension(R.dimen.px_180));
-		canvas.drawText("电企通相机", paddingLeft+20, dp2px(context, 150), paint_title);
-		mPaint = new Paint();
-		//paint.setStyle(Style.STROKE);//空心矩形框
-		mPaint.setStyle(Paint.Style.FILL);//实心矩形框
-	 
-	   switch (background_color_depth) {
-            case 0:
-                mPaint.setColor(
-						context.getResources().getColor(R.color.titi_background_color_white_transparent));
-                break;
-            case 1:
-                switch (background_color) {
-                    case 0:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_white_1));
-                        break;
-                    case 1:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_blue_1));
-                        break;
-                    case 2:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_green_1));
-                        break;
-                    case 3:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_yellow_1));
-                        break;
-                    case 4:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_red_1));
-                        break;
-                    case 5:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_black_1));
-                        break;
-                    case 6:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_pruple_1));
-                        break;
-                }
-                break;
-            case 2:
+		if (list_keywords.size()>0){
+            paint.getTextBounds(list_keywords.get(0), 0, list_keywords.get(0).length(), rect);
+            int h = rect.height()+15;//行与行之间的间距
+            mPaint = new Paint();
+            mPaint.setStyle(Paint.Style.FILL);//实心矩形框
+            switch (background_color_depth) {//先做颜色的深度选择，再进行颜色的选择
+                case 0:
+                    mPaint.setColor(
+                            context.getResources().getColor(R.color.titi_background_color_white_transparent));
+                    break;
+                case 1:
+                    switch (background_color) {
+                        case 0:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_white_1));
+                            break;
+                        case 1:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_blue_1));
+                            break;
+                        case 2:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_green_1));
+                            break;
+                        case 3:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_yellow_1));
+                            break;
+                        case 4:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_red_1));
+                            break;
+                        case 5:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_black_1));
+                            break;
+                        case 6:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_pruple_1));
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (background_color) {
+                        case 0:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_white_2));
+                            break;
+                        case 1:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_blue_2));
+                            break;
+                        case 2:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_green_2));
+                            break;
+                        case 3:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_yellow_2));
+                            break;
+                        case 4:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_red_2));
+                            break;
+                        case 5:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_black_2));
+                            break;
+                        case 6:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_pruple_2));
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (background_color) {
+                        case 0:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_white_3));
+                            break;
+                        case 1:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_blue_3));
+                            break;
+                        case 2:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_green_3));
+                            break;
+                        case 3:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_yellow_3));
+                            break;
+                        case 4:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_red_3));
+                            break;
+                        case 5:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_black_3));
+                            break;
+                        case 6:
+                            mPaint.setColor(
+                                    context.getResources().getColor(R.color.titi_background_color_pruple_3));
+                            break;
+                    }
+                    break;
+            }
 
-                switch (background_color) {
-                    case 0:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_white_2));
-                        break;
-                    case 1:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_blue_2));
-                        break;
-                    case 2:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_green_2));
-                        break;
-                    case 3:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_yellow_2));
-                        break;
-                    case 4:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_red_2));
-                        break;
-                    case 5:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_black_2));
-                        break;
-                    case 6:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_pruple_2));
-                        break;
-                }
-                break;
-            case 3:
-                switch (background_color) {
-                    case 0:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_white_3));
-                        break;
-                    case 1:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_blue_3));
-                        break;
-                    case 2:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_green_3));
-                        break;
-                    case 3:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_yellow_3));
-                        break;
-                    case 4:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_red_3));
-                        break;
-                    case 5:
-                        mPaint.setColor(
-								context.getResources().getColor(R.color.titi_background_color_black_3));
-                        break;
-                    case 6:
-                        mPaint.setColor(
-                                context.getResources().getColor(R.color.titi_background_color_pruple_3));
-                        break;
-                }
-                break;
-        }
-        Log.d(TAG, "drawTextToBitmap: "+(paddingLeft-10)+"+++++"+(paddingBottom-7*h-10));
-		canvas.drawRect(new RectF(paddingLeft-10, paddingBottom-8*h-(context.getResources().getDimension(R.dimen.px_20)), 4*(bitmap.getWidth()/5), paddingBottom+context.getResources().getDimension(R.dimen.px_20)), mPaint);
-		canvas.drawText(str_weather, paddingLeft, paddingBottom-7*h, paint);
-		canvas.drawText(str_longitude, paddingLeft, paddingBottom-6*h, paint);
-		canvas.drawText(str_latitude, paddingLeft, paddingBottom-5*h, paint);
-		if (str_add.length()>12){
-            String substring_front= str_add.substring(0,12);
-			String substring_end = str_add.substring(12);
-            canvas.drawText("地       址："+substring_front, paddingLeft, paddingBottom-4*h, paint);
-            canvas.drawText("                   "+substring_end, paddingLeft, paddingBottom-3*h, paint);
-            canvas.drawText(str_projectname, paddingLeft, paddingBottom-2*h, paint);
-            canvas.drawText(str_place, paddingLeft, paddingBottom-h, paint);
-            canvas.drawText(str_time, paddingLeft, paddingBottom, paint);
-        }else{
-            canvas.drawText("地       址："+str_add, paddingLeft, paddingBottom-4*h, paint);
-            canvas.drawText(str_projectname, paddingLeft, paddingBottom-3*h, paint);
-            canvas.drawText(str_place, paddingLeft, paddingBottom-2*h, paint);
-            canvas.drawText(str_time, paddingLeft, paddingBottom-1*h, paint);
-        }
+            int j = 0;//变量j是多添加的行数，可以让
+			int singleLine_textSize = 12;//单行默认显示的字数
+            for (int i=0;i<list_keywords.size();i++){
+				String str = list_keywords.get(i);
+                if (str.startsWith("^_^")){// 以^_^开头的字符串说明是长字符串地址
+                	str = str.substring(3);
+                	if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
+						String substring_front= str.substring(0,singleLine_textSize);
+						String substring_middlie = str.substring(singleLine_textSize,singleLine_textSize*2);
+						String substring_end = str.substring(singleLine_textSize*2);
+						canvas.drawText("地       址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("                    "+substring_middlie, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("                    "+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+					}else if (str.length()>singleLine_textSize){//地址大于12个字小于24个字的，显示为两行
+						String substring_front= str.substring(0,singleLine_textSize);
+						String substring_end = str.substring(singleLine_textSize);
+						canvas.drawText("地       址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("                    "+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+					}else {//其他情况一行显示
+						canvas.drawText("地       址："+str, paddingLeft, paddingBottom-paddingBottom-(list_keywords.size()-i-j)*h, paint);
+					}
+				}else{//其他信息情况
+					canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+				}
+            }// for,,,end
+			// 背景画布
+			canvas.drawRect(new RectF(paddingLeft-10, paddingBottom-(list_keywords.size()+j)*h-(context.getResources().getDimension(R.dimen.px_20)), 4*(bitmap.getWidth()/5), paddingBottom+context.getResources().getDimension(R.dimen.px_30)), mPaint);
+
+        }// if,,,end
 		return bitmap;
 	}
 

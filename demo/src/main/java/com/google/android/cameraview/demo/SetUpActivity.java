@@ -68,6 +68,7 @@ public class SetUpActivity extends AppCompatActivity {
     public static boolean b_custom_switch = false;
     public static int background_color = -1;
     public static int front_color = -1;
+    public static int front_color_flag = -1;
     public static int front_size_flag=1;
     public static int background_color_depth_flag=1;
     Switch sh_watermark_switch;
@@ -178,11 +179,10 @@ public class SetUpActivity extends AppCompatActivity {
                 break;
         }
 
-        switch (front_color){
+        switch (front_color_flag){
             case -1:
             case 0:
                 ll_fontcolor_1.setBackgroundResource(R.drawable.im_frame);
-
                 break;
             case 1:
                 ll_fontcolor_2.setBackgroundResource(R.drawable.im_frame);
@@ -509,6 +509,7 @@ public class SetUpActivity extends AppCompatActivity {
                 if (background instanceof ColorDrawable) {
                      front_color = ((ColorDrawable) background).getColor();
                 }
+                front_color_flag = 0;
             }
         });
         ll_fontcolor_2.setOnClickListener(new View.OnClickListener() {
@@ -525,6 +526,7 @@ public class SetUpActivity extends AppCompatActivity {
                 if (background instanceof ColorDrawable) {
                     front_color = ((ColorDrawable) background).getColor();
                 }
+                front_color_flag = 1;
             }
         });
         ll_fontcolor_3.setOnClickListener(new View.OnClickListener() {
@@ -541,6 +543,7 @@ public class SetUpActivity extends AppCompatActivity {
                 if (background instanceof ColorDrawable) {
                     front_color = ((ColorDrawable) background).getColor();
                 }
+                front_color_flag = 2;
             }
         });
         ll_fontcolor_4.setOnClickListener(new View.OnClickListener() {
@@ -558,6 +561,7 @@ public class SetUpActivity extends AppCompatActivity {
                     front_color = ((ColorDrawable) background).getColor();
                 }
                 iv_fontcolor_4.setBackgroundColor(front_color);
+                front_color_flag = 3;
             }
         });
         ll_fontcolor_5.setOnClickListener(new View.OnClickListener() {
@@ -575,6 +579,7 @@ public class SetUpActivity extends AppCompatActivity {
                     front_color = ((ColorDrawable) background).getColor();
                 }
                 iv_fontcolor_5.setBackgroundColor(front_color);
+                front_color_flag = 4;
             }
         });
         ll_fontcolor_6.setOnClickListener(new View.OnClickListener() {
@@ -592,6 +597,7 @@ public class SetUpActivity extends AppCompatActivity {
                     front_color = ((ColorDrawable) background).getColor();
                 }
                 iv_fontcolor_6.setBackgroundColor(front_color);
+                front_color_flag = 5;
             }
         });
         ll_fontcolor_7.setOnClickListener(new View.OnClickListener() {
@@ -609,11 +615,12 @@ public class SetUpActivity extends AppCompatActivity {
                     front_color = ((ColorDrawable) background).getColor();
                 }
                 iv_fontcolor_7.setBackgroundColor(front_color);
+                front_color_flag = 6;
             }
         });
 
         //显示当前时间
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String time= sdf.format( new Date());
         et_projectTime.setText(""+time);
     }
