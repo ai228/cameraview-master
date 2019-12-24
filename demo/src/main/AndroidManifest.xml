@@ -29,9 +29,7 @@
         android:theme="@style/Theme.Demo">
         <activity
             android:name=".SetUpActivity"
-            android:label="@string/title_activity_set_up"
-            android:theme="@style/Theme.Demo.NoActionBar"></activity>
-
+            android:label="@string/title_activity_set_up"></activity>
 
         <activity
             android:name=".MainActivity"

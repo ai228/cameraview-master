@@ -19,12 +19,14 @@ package com.google.android.cameraview.demo;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -96,6 +98,7 @@ public class SetUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_up);
+        //Density.setDensity(getApplication(),this);
         Intent intent1 = getIntent();
         str_projectname = intent1.getStringExtra("str_projectname");
         str_place = intent1.getStringExtra("str_place");
@@ -332,15 +335,13 @@ public class SetUpActivity extends AppCompatActivity {
 
             }
         });
-
-        SimpleToolbar  simpleToolbar = findViewById(R.id.toolbar);
-        simpleToolbar.setLeftTitleClickListener(new View.OnClickListener() {
+        findViewById(R.id.txt_left_title).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        simpleToolbar.setRightTitleClickListener(new View.OnClickListener() {
+        findViewById(R.id.txt_right_title).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
@@ -623,6 +624,15 @@ public class SetUpActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String time= sdf.format( new Date());
         et_projectTime.setText(""+time);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
     }
 
     @Override

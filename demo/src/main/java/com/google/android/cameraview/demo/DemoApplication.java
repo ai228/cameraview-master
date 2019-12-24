@@ -98,6 +98,7 @@ public class DemoApplication extends Application {
         //Beta.upgradeDialogLayoutId = R.layout.upgrade_layout;
 
         /***** 统一初始化Bugly产品，包含Beta *****/
-        Bugly.init(this, APP_ID, false);
+        //Bugly.init(this, APP_ID, false);
+
     }
 }

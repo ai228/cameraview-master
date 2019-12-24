@@ -297,7 +297,7 @@
             android:layout_below="@id/ll_8"
             tools:ignore="MissingConstraints">
             <TextView
-                android:text="日       期"
+                android:text="日         期"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"

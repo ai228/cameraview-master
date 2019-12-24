@@ -40,6 +40,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -57,6 +58,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -87,6 +89,16 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback,
         AspectRatioFragment.Listener {
+    private static final int COMPLETED = 0;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == COMPLETED) {
+                tv_projectAdd.setText(addressLine);
+            }
+        }
+    };
 
     private static final String TAG = "MainActivity";
     private static final String HTTP_PRE = "http://wthrcdn.etouch.cn/weather_mini?city=";
@@ -133,13 +145,13 @@ public class MainActivity extends AppCompatActivity implements
     private int front_size = 0;
     private int background_color_depth = 1;
 
-    private String str_weather = "天         气：";
-    private String str_longitude = "经         度：";
-    private String str_latitude = "纬         度：";
+    private String str_weather = "天        气：";
+    private String str_longitude = "经        度：";
+    private String str_latitude = "纬        度：";
     private String str_add = "";
     private String str_projectname = "工程名称：(待写)";
     private String str_place = "施工地点：(待写)";
-    private String str_time = "时         间：";
+    private String str_time = "时          间：";
 
     LinearLayout ll_titile_background;
     LinearLayout ll_add;
@@ -153,7 +165,8 @@ public class MainActivity extends AppCompatActivity implements
     private SoundPool sp;//声明一个SoundPool
     private int music;//定义一个整型用load（）；来设置suondID
 
-    int paint_size = 40;
+    float paint_size ;
+    String addressLine = "";
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -171,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     };
     private ImageView mIm_setup;
-        ImageView imageView;
+    ImageView imageView;
     TextView tv_projectName;
     TextView tv_projectAdd;
     TextView project_place;
@@ -189,6 +202,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        //Density.setDensity(getApplication(),this);
         setContentView(R.layout.activity_main);
         mCameraView = findViewById(R.id.camera);
         if (mCameraView != null) {
@@ -199,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements
             fab.setOnClickListener(mOnClickListener);
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
-        imageView = findViewById(R.id.imview);
+        //imageView = findViewById(R.id.imview);
         EditText etName = findViewById(R.id.my_name);
         mIm_setup = findViewById(R.id.iv_setup);
 
@@ -244,13 +265,9 @@ public class MainActivity extends AppCompatActivity implements
         getLocation();
         sp = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
         music = sp.load(this, R.raw.takend, 1); //把你的声音素材放到res/raw里，第2个参数即为资源文件，第3个为音乐的优先级
-
         list_keyword =  new ArrayList<String>();
+
     }
-
-
-
-
 
     @Override
     protected void onResume() {
@@ -333,6 +350,11 @@ public class MainActivity extends AppCompatActivity implements
         return mBackgroundHandler;
     }
 
+    float canvasTextSize1 = 42;
+    float canvasTextSize2 = 44;
+    float canvasTextSize3 = 46;
+    float canvasTextSize4 = 48;
+
     private CameraView.Callback mCallback
             = new CameraView.Callback() {
 
@@ -349,23 +371,26 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            float bitmapWidth = bitmap.getWidth();
+            float bitmapHeight = bitmap.getHeight();
+            float ratio = getPxRatio(bitmapWidth,bitmapHeight);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             paint.setColor(front_color);
             switch (front_size){
                 case 0:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_65);
+                    paint_size = canvasTextSize1*ratio;
                     break;
                 case 1:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_70);
+                    paint_size = canvasTextSize2*ratio;
                     break;
                 case 2:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_75);
+                    paint_size = canvasTextSize3*ratio;
                     break;
                 case 3:
-                    paint_size = (int) getResources().getDimension(R.dimen.px_80);
+                    paint_size = canvasTextSize4*ratio;
                     break;
             }
-            Log.d(TAG, "onPictureTaken: "+paint_size+"");
+            Log.d(TAG, "onPictureTaken_paint_size: "+paint_size+"");
             paint.setTextSize(paint_size);
             list_keyword.clear();
             if (b_projectname_switch)
@@ -386,8 +411,8 @@ public class MainActivity extends AppCompatActivity implements
                 list_keyword.clear();
             Bitmap toLeftBottom1 = ImageUtil.drawTextToLeftBottom(MainActivity.this, bitmap,
                     list_keyword,
-                    paint,(int) getResources().getDimension(R.dimen.px_20), (int) getResources().getDimension(R.dimen.px_100),background_color_depth,background_color);
-            // imageView.setImageBitmap(toLeftBottom1);
+                    paint,40*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),300*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),background_color_depth,background_color);
+            //imageView.setImageBitmap(toLeftBottom1);
             //saveImage(toLeftBottom1);
             //saveImageToGallery(toLeftBottom1);
             saveImageToGallery_test(toLeftBottom1);
@@ -442,7 +467,6 @@ public class MainActivity extends AppCompatActivity implements
                             })
                     .create();
         }
-
     }
 
     public void saveImageToGallery(Bitmap bmp) {
@@ -546,7 +570,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //文件名为时间
         long timeStamp = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss");
         String sd = sdf.format(new Date(timeStamp));
         String fileName = sd + ".jpg";
 
@@ -581,7 +605,6 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * 为了得到传回的数据，必须在前面的Activity中（指MainActivity类）重写onActivityResult方法
-     *
      * requestCode 请求码，即调用startActivityForResult()传递过去的值
      * resultCode 结果码，结果码用于标识返回数据来自哪个新Activity
      */
@@ -953,16 +976,17 @@ public class MainActivity extends AppCompatActivity implements
                             String str2 =((Address) places.get(0)).getAddressLine(1) + "" ;
                             String str3 = ((Address) places.get(0)).getAddressLine(2) + "" ;
                             mLocality = ((Address) places.get(0)).getLocality();
-                            str_add = str1+str3;
+                            addressLine = str1+str3;
                         }
                         //不为空,显示地理位置经纬度
-                        tv_projectAdd.setText(str_add);
+                        tv_projectAdd.setText(addressLine);
                     }
                     break;
                 }
             }
         }
     }
+
 
     public LocationListener locationListener = new LocationListener() {
         // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
@@ -983,37 +1007,51 @@ public class MainActivity extends AppCompatActivity implements
             if (location != null) {
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
-                str_longitude = "经         度："+lng;
+                str_longitude = "经        度："+lng;
                 project_logitude.setText(str_longitude);
-                str_latitude = "纬         度："+lat;
+                str_latitude  = "纬        度："+lat;
                 project_latitue.setText(str_latitude);
-                Geocoder geocoder = new Geocoder(MainActivity.this);
-                List places = null;
-                try {
+                final Geocoder geocoder = new Geocoder(MainActivity.this);
+                final List[] places = {null};
+                //  ！！！！！华为 安卓8.0 需要放在子线程中获取 ！！！！
+                new Thread() {
+                    @Override
+                    public void run() {
+                        //需要在子线程中处理的逻辑
+                        if (location != null) {
+                            try {
+                                // 获取当前线程的Looper
+                                Address tempAddress = getAddress(MainActivity.this,location.getLatitude(),location.getLongitude());
+                                String str1 = tempAddress.getAddressLine(0);
+                                String str2 = tempAddress.getAddressLine(2);
+                                addressLine = str1+str2;
+                                Message msg = new Message();
+                                msg.what = COMPLETED;
+                                handler.sendMessage(msg);
+                                //更新UI等
+                                Looper.prepare();
+                                Log.d(TAG, "Looper_addressLine: "+addressLine);
+                                //Toast.makeText(MainActivity.this,addressLine,Toast.LENGTH_LONG).show();
+                                //tv_projectAdd.setText(addressLine);
+                                Looper.loop();
+                                geocoder.getFromLocation(location.getLatitude(),
+                                        location.getLongitude(), 5);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }.start();
 
-                    Address tempAddress = getAddress(MainActivity.this,location.getLatitude(),location.getLongitude());
-                    String str1 = tempAddress.getAddressLine(0);
-                    String str2 = tempAddress.getAddressLine(2);
-                    String addressLine = str1+str2;
-
-                    //更新UI等
-                    tv_projectAdd.setText(addressLine);
-                    places = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                String placename = "";
-                if (places != null && places.size() > 0) {
+                if (places[0] != null && places[0].size() > 0) {
                     //一下的信息将会具体到某条街
                     //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
-                    placename = ((Address) places.get(0)).getAddressLine(0) + ""
-
-                            + ((Address) places.get(0)).getAddressLine(2);
-                    mLocality = ((Address) places.get(0)).getLocality();
+                    addressLine = ((Address) places[0].get(0)).getAddressLine(0) + ""
+                            + ((Address) places[0].get(0)).getAddressLine(2);
+                    mLocality = ((Address) places[0].get(0)).getLocality();
                 }
                 //不为空,显示地理位置经纬度
-                tv_projectAdd.setText(placename);
+                tv_projectAdd.setText(addressLine);
                 UrlHttpUtil.get(HTTP_PRE + "娄底", new CallBackUtil.CallBackString() {
                     @Override
                     public void onFailure(int code, String errorMessage) {
@@ -1032,7 +1070,7 @@ public class MainActivity extends AppCompatActivity implements
                             String low=info.getString("low").substring(2);
                             String type=info.getString("type");
                             String fengxiang=info.getString("fengxiang");
-                            str_weather = "天         气："+type+","+fengxiang+","+low+" ~"+high;
+                            str_weather = "天        气："+type+","+fengxiang+","+low+" ~"+high;
                             project_weather.setText(str_weather);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1084,14 +1122,15 @@ public class MainActivity extends AppCompatActivity implements
                                 // placename=((Address)places.get(0)).getLocality();
                                 //一下的信息将会具体到某条街
                                 //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
-                                placename = ((Address) places.get(0)).getAddressLine(0) + ""
-                                        + ((Address) places.get(0)).getAddressLine(1) + ","
+                                addressLine = ((Address) places.get(0)).getAddressLine(0) + ""
+                                        //+ ((Address) places.get(0)).getAddressLine(1) + ","
+                                        + ","
                                         + ((Address) places.get(0)).getAddressLine(2);
                                 mLocality = ((Address) places.get(0)).getLocality();
                             }
                             //不为空,显示地理位置经纬度
                             //Toast.makeText(MainActivity.this,  "city:"+placename, Toast.LENGTH_SHORT).show();
-                            tv_projectAdd.setText(placename);
+                            tv_projectAdd.setText(addressLine);
                         }
                     }catch (SecurityException e){
                         e.printStackTrace();
@@ -1131,6 +1170,32 @@ public class MainActivity extends AppCompatActivity implements
         }
         return null;
     }
+
+
+
+    private static int baseBitmapWidth = 1080;//在拍出照片的bitmap为1080*1920的真机下测试
+    private static int baseBitmapHeight = 1920;
+    /**
+     * 设置默认的百分比，所有拍照画到画布上的文字、底色都必须走此方法
+     */
+    public static float getPxRatio(float realBitmapWidth, float realBitmapHeight) {
+        float ratioWidth = realBitmapWidth / baseBitmapWidth;
+        float ratioHeight = realBitmapHeight / baseBitmapHeight;
+        return Math.min(ratioWidth, ratioHeight);
+    }
+
+    /**
+     * dip转pix
+     * @param context
+     * @param dp
+     * @return
+     */
+    public static int dp2px_(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
+
 }
 
 

@@ -618,19 +618,22 @@ public class ImageUtil {
 	 */
 	public static Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,
             List<String> list_keywords,
-            Paint paint, int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
+            Paint paint, float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
 //		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //		paint.setColor(color);
 //		paint.setTextSize(dp2px(context, paintSize));
 //		Rect bounds = new Rect();
 //		paint.getTextBounds(text, 0, text.length(), bounds);
-		return drawTextToBitmap(context,bitmap, list_keywords, paint,dp2px(context, paddingLeft),bitmap.getHeight() - dp2px(context, paddingBottom),background_color_depth,background_color);
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		Log.d(TAG, "drawTextToLeftBottom: "+width+height);
+		return drawTextToBitmap(context,bitmap, list_keywords, paint,paddingLeft,bitmap.getHeight() - paddingBottom,background_color_depth,background_color);
 	}
 
 	//图片上绘制文字
 	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap,
             List<String> list_keywords,
-            Paint paint,int paddingLeft, int paddingBottom,int background_color_depth,int background_color) {
+            Paint paint,float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
 		Config bitmapConfig = bitmap.getConfig();
 		paint.setDither(true); // 获取清晰的图像采样
 		paint.setFilterBitmap(true);// 过滤一些
@@ -641,14 +644,17 @@ public class ImageUtil {
 		Canvas canvas = new Canvas(bitmap);
         Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint_title.setColor(Color.rgb(252, 100, 8));
-        paint_title.setTextSize(context.getResources().getDimension(R.dimen.px_180));
-        canvas.drawText("电企通相机", paddingLeft+20, dp2px(context, 150), paint_title);
+        paint_title.setTextSize(100*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()));
+        canvas.drawText("电企通相机", paddingLeft,175*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), paint_title);
 		Rect rect = new Rect();
 		if (list_keywords.size()>0){
             paint.getTextBounds(list_keywords.get(0), 0, list_keywords.get(0).length(), rect);
             int h = rect.height()+15;//行与行之间的间距
             mPaint = new Paint();
-            mPaint.setStyle(Paint.Style.FILL);//实心矩形框
+
+            //mPaint.setStyle(Paint.Style.FILL);//实心矩形框
+//			Log.d(TAG, "background_color_depth22222222: "+background_color_depth);
+//			Log.d(TAG, "background_color22222222222: "+background_color);
             switch (background_color_depth) {//先做颜色的深度选择，再进行颜色的选择
                 case 0:
                     mPaint.setColor(
@@ -656,6 +662,7 @@ public class ImageUtil {
                     break;
                 case 1:
                     switch (background_color) {
+						case -1:
                         case 0:
                             mPaint.setColor(
                                     context.getResources().getColor(R.color.titi_background_color_white_1));
@@ -758,27 +765,27 @@ public class ImageUtil {
 				String str = list_keywords.get(i);
                 if (str.startsWith("^_^")){// 以^_^开头的字符串说明是长字符串地址
                 	str = str.substring(3);
-                	if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
+                	/*if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_middlie = str.substring(singleLine_textSize,singleLine_textSize*2);
 						String substring_end = str.substring(singleLine_textSize*2);
-						canvas.drawText("地       址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
-						canvas.drawText("                    "+substring_middlie, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
-						canvas.drawText("                    "+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
-					}else if (str.length()>singleLine_textSize){//地址大于12个字小于24个字的，显示为两行
+						canvas.drawText("地         址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("                   "+substring_middlie, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("                   "+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+					}else*/ if (str.length()>singleLine_textSize){//地址大于12个字小于24个字的，显示为两行
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_end = str.substring(singleLine_textSize);
-						canvas.drawText("地       址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
-						canvas.drawText("                    "+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+						canvas.drawText("地        址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("                     "+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
 					}else {//其他情况一行显示
-						canvas.drawText("地       址："+str, paddingLeft, paddingBottom-paddingBottom-(list_keywords.size()-i-j)*h, paint);
+						canvas.drawText("地        址："+str, paddingLeft, paddingBottom-paddingBottom-(list_keywords.size()-i-j)*h, paint);
 					}
 				}else{//其他信息情况
 					canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
 				}
             }// for,,,end
 			// 背景画布
-			canvas.drawRect(new RectF(paddingLeft-10, paddingBottom-(list_keywords.size()+j)*h-(context.getResources().getDimension(R.dimen.px_20)), 4*(bitmap.getWidth()/5), paddingBottom+context.getResources().getDimension(R.dimen.px_30)), mPaint);
+			canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), paddingBottom-(list_keywords.size()+j)*h-5*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), 4*(bitmap.getWidth()/5), paddingBottom+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
 
         }// if,,,end
 		return bitmap;
@@ -807,6 +814,10 @@ public class ImageUtil {
 //		sl.draw(canvas);
 		return bitmap;
 	}
+
+
+
+
 	/**
 	 * dip转pix
 	 * @param context
@@ -815,6 +826,7 @@ public class ImageUtil {
 	 */
 	public static int dp2px(Context context, float dp) {
 		final float scale = context.getResources().getDisplayMetrics().density;
+        Log.d(TAG, "dp2px: "+scale);
 		return (int) (dp * scale + 0.5f);
 	}
 }

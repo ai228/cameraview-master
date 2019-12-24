@@ -52,4 +52,11 @@
     <color name="titi_background_color_red_3">#99F90D31</color>
     <color name="titi_background_color_black_3">#99000000</color>
     <color name="titi_background_color_pruple_3">#99AB68D9</color>
+
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="black_overlay">#66000000</color>
+
 </resources>
