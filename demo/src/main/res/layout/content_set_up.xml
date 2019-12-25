@@ -704,6 +704,7 @@
 
         <LinearLayout
             android:id="@+id/ll_18"
+            android:visibility="gone"
             android:background="#ffffff"
             android:layout_marginTop="2dp"
             android:orientation="horizontal"

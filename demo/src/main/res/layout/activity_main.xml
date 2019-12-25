@@ -70,7 +70,9 @@
         android:layout_toRightOf="@id/my_name"
         android:padding="@dimen/px_20"
         android:layout_width="30dp"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp"
+        android:layout_toEndOf="@id/my_name"
+        android:layout_marginStart="@dimen/px_5" />
     <ImageView
         android:id="@+id/imview"
         android:visibility="gone"
@@ -86,9 +88,10 @@
         android:layout_marginLeft="6dp"
         android:layout_width="300dp"
         android:background="#1Affffff"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp">
         <TextView
-            android:text="标题"
+            android:text="@string/str_main_titile"
             android:textSize="15sp"
             android:gravity="center"
             android:textColor="#ffffff"
@@ -96,83 +99,154 @@
             android:background="#2A44D7"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/project_name"
-            android:text="工程名称："
-            android:textSize="@dimen/px_24"
-            android:textColor="#ffffff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/project_place"
-            android:text="施工地点："
-            android:textSize="@dimen/px_24"
-            android:textColor="#ffffff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/ll_project_name"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.cameraview.demo.JustifyTextView
+                    android:text="@string/jtv_project_name"
+                    android:textSize="@dimen/px_text_24"
+                    android:textColor="#ffffff"
+                    android:layout_width="@dimen/px_130"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/project_name"
+                    android:textSize="@dimen/px_text_24"
+                    android:textColor="#ffffff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/project_weather"
-            android:text="天        气："
-            android:textSize="@dimen/px_24"
-            android:textColor="#ffffff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/project_logitude"
-            android:text="经        度："
-            android:textSize="@dimen/px_24"
-            android:textColor="#ffffff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/project_latitue"
-            android:text="纬        度："
-            android:textSize="@dimen/px_24"
-            android:textColor="#ffffff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
+
+        <LinearLayout
+            android:id="@+id/ll_place"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.cameraview.demo.JustifyTextView
+                android:text="@string/jtv_place"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="@dimen/px_130"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/project_place"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_weather"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.cameraview.demo.JustifyTextView
+                android:text="@string/jtv_weather"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="@dimen/px_130"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/project_weather"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_logitude"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <com.google.android.cameraview.demo.JustifyTextView
+                android:text="@string/jtv_logitude"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="@dimen/px_130"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/project_logitude"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_latitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.google.android.cameraview.demo.JustifyTextView
+                android:text="@string/jtv_latitude"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="@dimen/px_130"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/project_latitue"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <com.google.android.cameraview.demo.JustifyTextView
             android:id="@+id/project_altitude"
-            android:text="海         拔：103.53米"
-            android:textSize="@dimen/px_24"
+            android:text="@string/jtv_altitude"
+            android:textSize="@dimen/px_text_24"
             android:visibility="gone"
             android:textColor="#ffffff"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/px_130"
             android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:id="@+id/ll_add"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
+            <com.google.android.cameraview.demo.JustifyTextView
                 android:id="@+id/tv_fixed_add"
-                android:text="地        址："
-                android:textSize="@dimen/px_24"
+                android:text="@string/jtv_address"
+                android:textSize="@dimen/px_text_24"
                 android:textColor="#ffffff"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/px_130"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/project_add"
                 android:text=""
-                android:textSize="@dimen/px_24"
+                android:textSize="@dimen/px_text_24"
                 android:textColor="#ffffff"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.google.android.cameraview.demo.JustifyTextView
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:text="@string/jtv_time"
+                android:layout_width="@dimen/px_130"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/project_time"
+                android:textSize="@dimen/px_text_24"
+                android:textColor="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/project_time"
-            android:textSize="@dimen/px_24"
-            android:textColor="#ffffff"
-            android:text="时         间："
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
             android:id="@+id/tv_custom"
-            android:textSize="@dimen/px_24"
+            android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
             android:visibility="gone"
             android:text=""

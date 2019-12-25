@@ -145,16 +145,28 @@ public class MainActivity extends AppCompatActivity implements
     private int front_size = 0;
     private int background_color_depth = 1;
 
-    private String str_weather = "天        气：";
-    private String str_longitude = "经        度：";
-    private String str_latitude = "纬        度：";
+//    private String str_weather = "天气：";
+//    private String str_longitude = "经度：";
+//    private String str_latitude = "纬度：";
+//    private String str_add = "";
+//    private String str_projectname = "工程名称：";
+//    private String str_place = "施工地点：";
+//    private String str_time = "时间：";
+    private String str_weather = "";
+    private String str_longitude = "";
+    private String str_latitude = "";
     private String str_add = "";
-    private String str_projectname = "工程名称：(待写)";
-    private String str_place = "施工地点：(待写)";
-    private String str_time = "时          间：";
-
+    private String str_projectname = "(待填)";
+    private String str_place = "(待填)";
+    private String str_time = "";
     LinearLayout ll_titile_background;
     LinearLayout ll_add;
+    LinearLayout ll_project_name;
+    LinearLayout ll_place;
+    LinearLayout ll_weather;
+    LinearLayout ll_logitude;
+    LinearLayout ll_latitude;
+    LinearLayout ll_time;
     TextView project_weather;
     TextView project_logitude;
     TextView project_latitue;
@@ -228,6 +240,12 @@ public class MainActivity extends AppCompatActivity implements
         project_time = findViewById(R.id.project_time);
         ll_titile_background = findViewById(R.id.ll_titile_background);
         ll_add = findViewById(R.id.ll_add);
+        ll_project_name = findViewById(R.id.ll_project_name);
+        ll_place = findViewById(R.id.ll_place);
+        ll_weather = findViewById(R.id.ll_weather);
+        ll_logitude = findViewById(R.id.ll_logitude);
+        ll_latitude = findViewById(R.id.ll_latitude);
+        ll_time = findViewById(R.id.ll_time);
         //ll_titile_background.setVisibility(View.GONE);
         project_weather = findViewById(R.id.project_weather);
         project_logitude = findViewById(R.id.project_logitude);
@@ -248,15 +266,14 @@ public class MainActivity extends AppCompatActivity implements
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String time= sdf.format( new Date());
-        str_time = "时        间："+time;
+        str_time = ""+time;
         project_time.setText(str_time); //更新时间
         mIm_setup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent setUpActivity = new Intent(MainActivity.this, SetUpActivity.class);
-                setUpActivity.putExtra("str_projectname",str_projectname.substring(5));
-                setUpActivity.putExtra("str_place",str_place.substring(5));
-
+                setUpActivity.putExtra("str_projectname",str_projectname);
+                setUpActivity.putExtra("str_place",str_place);
                 startActivityForResult(setUpActivity, 0);
             }
         });
@@ -394,27 +411,27 @@ public class MainActivity extends AppCompatActivity implements
             paint.setTextSize(paint_size);
             list_keyword.clear();
             if (b_projectname_switch)
-                list_keyword.add(str_projectname);
+                list_keyword.add("工程名称："+str_projectname);
             if (b_place_switch)
-                list_keyword.add(str_place);
+                list_keyword.add("施工地点："+str_place);
             if (b_weather_switch)
-                list_keyword.add(str_weather);
+                list_keyword.add("天\u3000\u3000气："+str_weather);
             if (b_longitude_switch){
-                list_keyword.add(str_longitude);
-                list_keyword.add(str_latitude);
+                list_keyword.add("经\u3000\u3000度："+str_longitude);
+                list_keyword.add("纬\u3000\u3000度："+str_latitude);
             }
             if (b_add_switch)
-                list_keyword.add("^_^"+str_add);
+                list_keyword.add("^_^"+addressLine);
             if (b_time_switch)
-                list_keyword.add(str_time);
+                list_keyword.add("时\u3000\u3000间："+str_time);
             if (!b_watermark_switch)
                 list_keyword.clear();
             Bitmap toLeftBottom1 = ImageUtil.drawTextToLeftBottom(MainActivity.this, bitmap,
                     list_keyword,
                     paint,40*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),300*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),background_color_depth,background_color);
             //imageView.setImageBitmap(toLeftBottom1);
-            //saveImage(toLeftBottom1);
-            //saveImageToGallery(toLeftBottom1);
+//            saveImage(toLeftBottom1);
+//            saveImageToGallery(toLeftBottom1);
             saveImageToGallery_test(toLeftBottom1);
         }
     };
@@ -488,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements
          */
             String fileName ;
             File file ;
-            if(Build.BRAND .equals("Xiaomi") ){ // 小米手机
+            if(Build.BRAND .equals("Xiaomi") ){ // 小米手机  ----> 工业相机改为了“DCIM”
                 fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/Camera/"+format.format(new Date())+".JPEG" ;
             }else{ // Meizu 、Oppo
                 fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/"+format.format(new Date())+".JPEG" ;
@@ -537,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }
-        File appDir = new File(Environment.getExternalStorageDirectory(), "Boohee");
+        File appDir = new File(Environment.getExternalStorageDirectory(), "工业相机");
         if (!appDir.exists()) {
             appDir.mkdir();
         }
@@ -550,6 +567,7 @@ public class MainActivity extends AppCompatActivity implements
             fos.close();
         } catch (Exception e) {
             e.printStackTrace();
+            saveImageToGallery(bmp);
         }
         // 发送广播，通知刷新图库的显示
         this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
@@ -589,6 +607,7 @@ public class MainActivity extends AppCompatActivity implements
                     Uri.fromFile(new File(file.getPath()))));
 
         } catch (FileNotFoundException e) {
+            saveImage(bmp);
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -613,9 +632,9 @@ public class MainActivity extends AppCompatActivity implements
         if (data != null) {
             background_color = data.getExtras().getInt("background_color");  
             front_color = data.getExtras().getInt("front_color");
-            str_projectname = "工程名称：" + data.getExtras().getString("name");
-            str_place = "施工地点：" + data.getExtras().getString("add");  
-            str_time = "时        间：" + data.getExtras().getString("time");  
+            str_projectname = "" + data.getExtras().getString("name");
+            str_place = "" + data.getExtras().getString("add");
+            str_time = "" + data.getExtras().getString("time");
             front_size = data.getExtras().getInt("front_size");  
             b_watermark_switch = data.getExtras().getBoolean("b_watermark_switch");  
             b_weather_switch = data.getExtras().getBoolean("b_weather_switch");  
@@ -654,17 +673,17 @@ public class MainActivity extends AppCompatActivity implements
             }
             //天气开关
             if (b_weather_switch){
-                project_weather.setVisibility(View.VISIBLE);
+                ll_weather.setVisibility(View.VISIBLE);
             }else {
-                project_weather.setVisibility(View.GONE);
+                ll_weather.setVisibility(View.GONE);
             }
             //经纬度开关
             if (b_longitude_switch){
-                project_logitude.setVisibility(View.VISIBLE);
-                project_latitue.setVisibility(View.VISIBLE);
+                ll_logitude.setVisibility(View.VISIBLE);
+                ll_latitude.setVisibility(View.VISIBLE);
             }else {
-                project_logitude.setVisibility(View.GONE);
-                project_latitue.setVisibility(View.GONE);
+                ll_logitude.setVisibility(View.GONE);
+                ll_latitude.setVisibility(View.GONE);
             }
             //地址开关
             if (b_add_switch){
@@ -674,21 +693,21 @@ public class MainActivity extends AppCompatActivity implements
             }
             //工程名称开关
             if (b_projectname_switch){
-                tv_projectName.setVisibility(View.VISIBLE);
+                ll_project_name.setVisibility(View.VISIBLE);
             }else {
-                tv_projectName.setVisibility(View.GONE);
+                ll_project_name.setVisibility(View.GONE);
             }
             //施工地点开关
             if (b_place_switch){
-                project_place.setVisibility(View.VISIBLE);
+                ll_place.setVisibility(View.VISIBLE);
             }else {
-                project_place.setVisibility(View.GONE);
+                ll_place.setVisibility(View.GONE);
             }
             //日期开关
             if (b_time_switch){
-                project_time.setVisibility(View.VISIBLE);
+                ll_time.setVisibility(View.VISIBLE);
             }else {
-                project_time.setVisibility(View.GONE);
+                ll_time.setVisibility(View.GONE);
             }
             //自定义开关
             if (b_custom_switch){
@@ -1007,9 +1026,9 @@ public class MainActivity extends AppCompatActivity implements
             if (location != null) {
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
-                str_longitude = "经        度："+lng;
+                str_longitude = ""+lng;
                 project_logitude.setText(str_longitude);
-                str_latitude  = "纬        度："+lat;
+                str_latitude  = ""+lat;
                 project_latitue.setText(str_latitude);
                 final Geocoder geocoder = new Geocoder(MainActivity.this);
                 final List[] places = {null};
@@ -1070,7 +1089,7 @@ public class MainActivity extends AppCompatActivity implements
                             String low=info.getString("low").substring(2);
                             String type=info.getString("type");
                             String fengxiang=info.getString("fengxiang");
-                            str_weather = "天        气："+type+","+fengxiang+","+low+" ~"+high;
+                            str_weather = ""+type+","+fengxiang+","+low+" ~"+high;
                             project_weather.setText(str_weather);
                         } catch (JSONException e) {
                             e.printStackTrace();

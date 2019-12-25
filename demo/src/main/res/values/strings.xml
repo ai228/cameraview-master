@@ -24,5 +24,14 @@
     <string name="title_activity_set_up">SetUpActivity</string>
     <string name="project_name">工程名称</string>
     <string name="title">电企通相机</string>
+    <string name="str_main_titile">标题</string>
+    <string name="jtv_project_name">工程名称：</string>
+    <string name="jtv_place">施工地点：</string>
+    <string name="jtv_weather">天气：</string>
+    <string name="jtv_logitude">经度：</string>
+    <string name="jtv_latitude">纬度：</string>
+    <string name="jtv_time">时间：</string>
+    <string name="jtv_address">地址：</string>
+    <string name="jtv_altitude">海拔：103.53米</string>
 
 </resources>
