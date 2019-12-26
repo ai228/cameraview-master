@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.cameraview.demo;
+package com.google.android.cameraview.demo.util;
 
 import static android.content.ContentValues.TAG;
 
@@ -31,6 +31,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
 import android.util.Log;
+
+import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.ui.activity.MainActivity;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -174,7 +177,7 @@ public class ImageUtil {
 		Canvas canvas = new Canvas(bitmap);
         Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint_title.setColor(Color.rgb(252, 100, 8));
-        paint_title.setTextSize(100*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()));
+        paint_title.setTextSize(100* MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()));
         canvas.drawText("电企通相机", paddingLeft,175*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), paint_title);
 		Rect rect = new Rect();
 		if (list_keywords.size()>0){

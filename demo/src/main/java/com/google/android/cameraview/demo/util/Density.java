@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.cameraview.demo;
+package com.google.android.cameraview.demo.util;
 
 import android.app.Activity;
 import android.app.Application;

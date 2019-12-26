@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.cameraview.demo;
+package com.google.android.cameraview.demo.ui.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -23,7 +23,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,6 +33,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
+
+import com.google.android.cameraview.demo.BackgoundcolorSeekBar;
+import com.google.android.cameraview.demo.FontsizeRaeSeekBar;
+import com.google.android.cameraview.demo.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

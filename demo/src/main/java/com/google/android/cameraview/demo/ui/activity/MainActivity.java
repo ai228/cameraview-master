@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.cameraview.demo;
+package com.google.android.cameraview.demo.ui.activity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -67,8 +67,11 @@ import android.widget.Toast;
 
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
-import com.google.android.cameraview.demo.urlhttp.CallBackUtil;
-import com.google.android.cameraview.demo.urlhttp.UrlHttpUtil;
+import com.google.android.cameraview.demo.ui.fragment.AspectRatioFragment;
+import com.google.android.cameraview.demo.util.ImageUtil;
+import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.util.urlhttp.CallBackUtil;
+import com.google.android.cameraview.demo.util.urlhttp.UrlHttpUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;

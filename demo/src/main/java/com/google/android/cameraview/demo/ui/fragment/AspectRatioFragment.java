@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.cameraview.demo;
+package com.google.android.cameraview.demo.ui.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
