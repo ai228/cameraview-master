@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2016 The Android Open Source Project
   ~
@@ -14,11 +15,17 @@
   ~ limitations under the License.
   -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android" android:constantSize="true">
-    <item>
-        <shape android:shape="oval">
-            <solid android:color="#4FD563" />
-            <size android:width="24dp" android:height="24dp" />
-        </shape>
-    </item>
-</selector>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.TestKotlin">
+    <TextView
+        android:text="sdkjdjkf"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints">
+
+    </TextView>
+</android.support.constraint.ConstraintLayout>

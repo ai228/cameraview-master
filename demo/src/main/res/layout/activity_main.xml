@@ -21,58 +21,147 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@android:color/black"
     tools:context=".ui.activity.MainActivity">
+
+    <!--    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_marginTop="@dimen/px_30"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>-->
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/camera"
+        android:layout_marginBottom="@dimen/px_0"
+        android:background="@android:color/black">
+        <ImageView
+            android:id="@+id/iv_logoooo"
+            android:layout_marginLeft="@dimen/px_10"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_logo"
+            android:layout_width="@dimen/px_50"
+            android:layout_height="@dimen/px_42">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/my_name"
+            android:text="@string/title"
+            android:layout_marginLeft="@dimen/px_8"
+            android:layout_toRightOf="@id/iv_logoooo"
+            android:textSize="@dimen/px_text_40"
+            android:layout_centerVertical="true"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+        <ImageView
+            android:id="@+id/iv_setup"
+            android:layout_width="@dimen/px_40"
+            android:layout_height="@dimen/px_40"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="@dimen/px_5"
+            android:layout_marginLeft="@dimen/px_5"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/px_30"
+            android:layout_marginRight="@dimen/px_30"
+            android:background="@drawable/icon_setting" />
+
+        <ImageView
+            android:id="@+id/switch_flash"
+            android:layout_width="@dimen/px_40"
+            android:layout_height="@dimen/px_40"
+            android:layout_marginRight="@dimen/px_6"
+            android:layout_toLeftOf="@id/iv_setup"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_light" />
+
+    </RelativeLayout>
 
     <com.google.android.cameraview.CameraView
         android:id="@+id/camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/px_500"
         android:adjustViewBounds="true"
+        app:aspectRatio="4:3"
+        android:layout_above="@id/ll_takened"
         android:background="@android:color/black"/>
+    <include layout="@layout/layout_main_titile" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_marginTop="@dimen/px_30"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/take_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_takened"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/ic_camera"
-        app:useCompatPadding="true"/>
-
-    <EditText
-        android:id="@+id/my_name"
-        android:text="@string/title"
-        android:textSize="30sp"
-        android:textColor="#FC6408"
-        android:layout_marginTop="@dimen/px_15"
-        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/px_25"
+       android:paddingBottom="@dimen/px_10"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </EditText>
+        <View
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_width="0dp" />
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/iv_photos"
+            android:layout_marginRight="@dimen/px_40"
+            android:background="@color/primaryText"
+            android:layout_height="@dimen/px_65"
+            android:layout_width="@dimen/px_70"
+            android:layout_marginEnd="@dimen/px_40" />
+        <View
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_width="0dp" />
+        <ImageView
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/take_picture"
+            android:background="@drawable/icon_tokened"
+            android:layout_height="@dimen/px_80"
+            android:scaleType="centerCrop"
+            android:layout_width="0dp" />
 
-    <ImageView
-        android:id="@+id/iv_setup"
-        android:layout_marginLeft="@dimen/px_5"
-        android:layout_marginTop="@dimen/px_45"
-        android:background="@drawable/im_setup"
-        android:layout_toRightOf="@id/my_name"
-        android:padding="@dimen/px_20"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_toEndOf="@id/my_name"
-        android:layout_marginStart="@dimen/px_5" />
+        <View
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_width="0dp" />
+        <ImageView
+            android:id="@+id/switch_camera"
+            android:background="@drawable/icon_reversal"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/px_40"
+            android:layout_height="@dimen/px_65"
+            android:layout_width="@dimen/px_70"
+            android:layout_marginStart="@dimen/px_40" />
+        <View
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:layout_width="0dp" />
+    </LinearLayout>
+
+
+
+
+    <!--  <ImageView
+          android:id="@+id/iv_setup"
+          android:layout_marginLeft="@dimen/px_5"
+          android:layout_marginTop="@dimen/px_45"
+          android:background="@mipmap/icon_setting"
+          android:layout_toRightOf="@id/my_name"
+          android:padding="@dimen/px_20"
+          android:layout_width="@dimen/px_60"
+          android:layout_height="@dimen/px_60"
+          android:layout_toEndOf="@id/my_name"
+          android:layout_marginStart="@dimen/px_5" />-->
     <ImageView
         android:id="@+id/imview"
         android:visibility="gone"
@@ -80,178 +169,6 @@
         android:layout_height="200dp">
     </ImageView>
 
-    <LinearLayout
-        android:id="@+id/ll_titile_background"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
-        android:orientation="vertical"
-        android:layout_marginLeft="6dp"
-        android:layout_width="300dp"
-        android:background="#1Affffff"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp">
-        <TextView
-            android:text="@string/str_main_titile"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:layout_width="match_parent"
-            android:background="#2A44D7"
-            android:layout_height="wrap_content"/>
 
-            <LinearLayout
-                android:id="@+id/ll_project_name"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.cameraview.demo.JustifyTextView
-                    android:text="@string/jtv_project_name"
-                    android:textSize="@dimen/px_text_24"
-                    android:textColor="#ffffff"
-                    android:layout_width="@dimen/px_130"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:id="@+id/project_name"
-                    android:textSize="@dimen/px_text_24"
-                    android:textColor="#ffffff"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_place"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.cameraview.demo.JustifyTextView
-                android:text="@string/jtv_place"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="@dimen/px_130"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/project_place"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_weather"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.cameraview.demo.JustifyTextView
-                android:text="@string/jtv_weather"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="@dimen/px_130"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/project_weather"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_logitude"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <com.google.android.cameraview.demo.JustifyTextView
-                android:text="@string/jtv_logitude"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="@dimen/px_130"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/project_logitude"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_latitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <com.google.android.cameraview.demo.JustifyTextView
-                android:text="@string/jtv_latitude"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="@dimen/px_130"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/project_latitue"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <com.google.android.cameraview.demo.JustifyTextView
-            android:id="@+id/project_altitude"
-            android:text="@string/jtv_altitude"
-            android:textSize="@dimen/px_text_24"
-            android:visibility="gone"
-            android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:id="@+id/ll_add"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.cameraview.demo.JustifyTextView
-                android:id="@+id/tv_fixed_add"
-                android:text="@string/jtv_address"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="@dimen/px_130"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/project_add"
-                android:text=""
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <com.google.android.cameraview.demo.JustifyTextView
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:text="@string/jtv_time"
-                android:layout_width="@dimen/px_130"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/project_time"
-                android:textSize="@dimen/px_text_24"
-                android:textColor="#ffffff"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_custom"
-            android:textSize="@dimen/px_text_24"
-            android:textColor="#ffffff"
-            android:visibility="gone"
-            android:text=""
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
 
 </RelativeLayout>

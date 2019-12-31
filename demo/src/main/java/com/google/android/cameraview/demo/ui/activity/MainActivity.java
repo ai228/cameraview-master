@@ -17,11 +17,13 @@
 package com.google.android.cameraview.demo.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,7 +47,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -53,13 +54,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,9 +66,9 @@ import android.widget.Toast;
 
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
+import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.ui.fragment.AspectRatioFragment;
 import com.google.android.cameraview.demo.util.ImageUtil;
-import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.util.urlhttp.CallBackUtil;
 import com.google.android.cameraview.demo.util.urlhttp.UrlHttpUtil;
 
@@ -93,12 +92,14 @@ public class MainActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback,
         AspectRatioFragment.Listener {
     private static final int COMPLETED = 0;
+    public static boolean is_16_9 = true;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == COMPLETED) {
-                tv_projectAdd.setText(addressLine);
+                tv_projectAdd.setText(str_location);
             }
         }
     };
@@ -134,19 +135,24 @@ public class MainActivity extends AppCompatActivity implements
 
     private Handler mBackgroundHandler;
     //变量参数
-    private boolean b_watermark_switch=true;
-    private boolean b_weather_switch=true;
-    private boolean b_longitude_switch=true;
-    private boolean b_add_switch=true;
-    private boolean b_projectname_switch=true;
-    private boolean b_place_switch=true;
-    private boolean b_time_switch=true;
-    private boolean b_custom_switch=true;
-
+    private boolean b_watermark_switch;
+    private boolean b_weather_switch;
+    private boolean b_longitude_switch;
+    private boolean b_add_switch;
+    private boolean b_projectname_switch;
+    private boolean b_place_switch;
+    private boolean b_time_switch;
+    private boolean b_custom_switch;
+    private boolean b_voice_switch;
+    private boolean b_abtain_switch;
+    private boolean b_titileShow_switch;
+    private boolean b_content;
+    private int background_color_depth_flag = 1;
     private int background_color =0;
+//    private int front_color_flag = -1;
     private int front_color = -1;
-    private int front_size = 0;
-    private int background_color_depth = 1;
+    private int front_size_flag = 0;
+    private int  front_size = 1;
 
 //    private String str_weather = "天气：";
 //    private String str_longitude = "经度：";
@@ -162,26 +168,39 @@ public class MainActivity extends AppCompatActivity implements
     private String str_projectname = "(待填)";
     private String str_place = "(待填)";
     private String str_time = "";
+    private String str_abtain = "str_取证单位";
+    private String str_titileShow = "str_标题名称";
+    private String str_location = "";
+    private String str_content = "str_作业内容";
+    private String str_longitude_latitude = "str_经纬度数";
     LinearLayout ll_titile_background;
     LinearLayout ll_add;
     LinearLayout ll_project_name;
     LinearLayout ll_place;
     LinearLayout ll_weather;
+    LinearLayout ll_abtain;
     LinearLayout ll_logitude;
-    LinearLayout ll_latitude;
     LinearLayout ll_time;
+    LinearLayout ll_content;
     TextView project_weather;
-    TextView project_logitude;
-    TextView project_latitue;
-    TextView project_altitude;
+    TextView project_logitude_latitude;
     TextView tv_fixed_add;
+    TextView jtv_weather;
+    TextView jtv_logitude;
+    TextView jtv_time;
+    TextView tv_content;
+    TextView jtv_content;
+    TextView jtv_projectName;
+    TextView jtv_abtain;
+    TextView jtv_place;
     TextView tv_custom;
+    TextView tv_titile;
+    TextView tv_abtain;
 
     private SoundPool sp;//声明一个SoundPool
     private int music;//定义一个整型用load（）；来设置suondID
 
     float paint_size ;
-    String addressLine = "";
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -189,10 +208,23 @@ public class MainActivity extends AppCompatActivity implements
             switch (v.getId()) {
                 case R.id.take_picture:
                     if (mCameraView != null) {
-                        sp.play(music, 1, 1, 0, 0, 1);
+                        if (b_voice_switch)
+                            sp.play(music, 1, 1, 0, 0, 1);
                         mToast = Toast.makeText(MainActivity.this,"图片保存中...",Toast.LENGTH_LONG);
                         mToast.show();
                         mCameraView.takePicture();
+                        /*if (is_16_9){
+                            mCameraView.setAspectRatio(AspectRatio.parse("16:9"));
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mCameraView.takePicture();
+
+                                }
+                            },500 );
+                        }else{
+                            mCameraView.takePicture();
+                        }*/
                     }
                     break;
             }
@@ -201,9 +233,10 @@ public class MainActivity extends AppCompatActivity implements
     private ImageView mIm_setup;
     ImageView imageView;
     TextView tv_projectName;
-    TextView tv_projectAdd;
-    TextView project_place;
+    TextView tv_projectAdd;//地址信息内容
+    TextView project_place;//施工单位内容
     TextView project_time;
+    TextView tv_project_add;
 
     double lat;
     double lng;
@@ -214,10 +247,18 @@ public class MainActivity extends AppCompatActivity implements
     private String mLocality;
     private Toast mToast;
     private List<String> list_keyword;
+    private static int LIGHT_FLAG = 0;//0：自动；1：关闭；2：打开
+    ImageView iv_light;
+    private SharedPreferences mSharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        WindowManager wm = this.getWindowManager();
+        double width = wm.getDefaultDisplay().getWidth();
+        double height = wm.getDefaultDisplay().getHeight();
+        double raio = height / width;
+        Toast.makeText(this,Double.toString(raio),Toast.LENGTH_LONG).show();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明
             getWindow().setFlags(
@@ -227,42 +268,53 @@ public class MainActivity extends AppCompatActivity implements
         //Density.setDensity(getApplication(),this);
         setContentView(R.layout.activity_main);
         mCameraView = findViewById(R.id.camera);
+
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
-        FloatingActionButton fab = findViewById(R.id.take_picture);
+        ImageView fab = findViewById(R.id.take_picture);
         if (fab != null) {
             fab.setOnClickListener(mOnClickListener);
         }
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
         //imageView = findViewById(R.id.imview);
-        EditText etName = findViewById(R.id.my_name);
+        TextView etName = findViewById(R.id.my_name);
         mIm_setup = findViewById(R.id.iv_setup);
 
         project_place = findViewById(R.id.project_place);
         project_time = findViewById(R.id.project_time);
+        tv_project_add = findViewById(R.id.project_add);
         ll_titile_background = findViewById(R.id.ll_titile_background);
         ll_add = findViewById(R.id.ll_add);
         ll_project_name = findViewById(R.id.ll_project_name);
         ll_place = findViewById(R.id.ll_place);
         ll_weather = findViewById(R.id.ll_weather);
+        ll_abtain = findViewById(R.id.ll_abtain);
         ll_logitude = findViewById(R.id.ll_logitude);
-        ll_latitude = findViewById(R.id.ll_latitude);
+        ll_content = findViewById(R.id.ll_content);
         ll_time = findViewById(R.id.ll_time);
         //ll_titile_background.setVisibility(View.GONE);
         project_weather = findViewById(R.id.project_weather);
-        project_logitude = findViewById(R.id.project_logitude);
-        project_latitue = findViewById(R.id.project_latitue);
-        project_altitude = findViewById(R.id.project_altitude);
+        project_logitude_latitude = findViewById(R.id.project_logitude_latitude);
+        tv_titile = findViewById(R.id.tv_titile);
         tv_fixed_add = findViewById(R.id.tv_fixed_add);
+        jtv_weather = findViewById(R.id.jtv_weather);
+        jtv_logitude = findViewById(R.id.jtv_logitude);
+        jtv_time = findViewById(R.id.jtv_time);
+        jtv_content = findViewById(R.id.jtv_content);
+        jtv_projectName = findViewById(R.id.jtv_projectName);
+        jtv_abtain = findViewById(R.id.jtv_abtain);
+        jtv_place = findViewById(R.id.jtv_place);
+        tv_abtain = findViewById(R.id.tv_abtain);
         tv_custom = findViewById(R.id.tv_custom);
         tv_projectAdd = findViewById(R.id.project_add);
         tv_projectName = findViewById(R.id.project_name);
+        tv_content = findViewById(R.id.tv_content);
         tv_projectName.setText(str_projectname);
         project_place = findViewById(R.id.project_place);
         project_place.setText(str_place);
         etName.setFocusableInTouchMode(false);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -277,6 +329,15 @@ public class MainActivity extends AppCompatActivity implements
                 Intent setUpActivity = new Intent(MainActivity.this, SetUpActivity.class);
                 setUpActivity.putExtra("str_projectname",str_projectname);
                 setUpActivity.putExtra("str_place",str_place);
+                setUpActivity.putExtra("str_weather",str_weather);
+                setUpActivity.putExtra("sh_voice_switch",b_voice_switch);
+                setUpActivity.putExtra("str_titileShow",str_titileShow);
+                setUpActivity.putExtra("str_abtainCompany",str_abtain);
+                setUpActivity.putExtra("str_add",str_add);
+                setUpActivity.putExtra("str_location",str_location);
+                setUpActivity.putExtra("str_content",str_content);
+                setUpActivity.putExtra("str_time",str_time);
+                setUpActivity.putExtra("str_longitude_latitude",str_longitude_latitude);
                 startActivityForResult(setUpActivity, 0);
             }
         });
@@ -286,7 +347,102 @@ public class MainActivity extends AppCompatActivity implements
         sp = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
         music = sp.load(this, R.raw.takend, 1); //把你的声音素材放到res/raw里，第2个参数即为资源文件，第3个为音乐的优先级
         list_keyword =  new ArrayList<String>();
+   /*    new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AspectRatio t_ratio = AspectRatio.parse("4:3");
+                mCameraView.setAspectRatio(t_ratio);
+                onStart();
+                onResume();
+            }
+        },500 );*/
+        iv_light = findViewById(R.id.switch_flash);
+        iv_light.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                {
+                    if (mCameraView != null) {
+                        switch (LIGHT_FLAG){
+                            case 0://当闪关灯自动状态
+                                //设置为关闭
+                                LIGHT_FLAG = 1;
+                                mCameraView.setFlash(FLASH_OPTIONS[LIGHT_FLAG]);
+                                iv_light.setBackground(MainActivity.this.getResources().getDrawable(R.drawable.icon_light_close));
+                                break;
+                            case 1://当闪光灯关闭状态
+                                //设置为打开
+                                LIGHT_FLAG = 2;
+                                mCameraView.setFlash(FLASH_OPTIONS[LIGHT_FLAG]);
+                                iv_light.setBackground(MainActivity.this.getResources().getDrawable(R.drawable.icon_light_open));
+                                break;
+                            case 2://当闪光灯打开状态
+                                //设置为打开
+                                LIGHT_FLAG = 0;
+                                mCameraView.setFlash(FLASH_OPTIONS[LIGHT_FLAG]);
+                                iv_light.setBackground(MainActivity.this.getResources().getDrawable(R.drawable.icon_light));
+                                break;
+                        }
+                    }
+                }
+            }
+        });
+        findViewById(R.id.switch_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCameraView != null) {
+                    int facing = mCameraView.getFacing();
+                    mCameraView.setFacing(facing == CameraView.FACING_FRONT ?
+                            CameraView.FACING_BACK : CameraView.FACING_FRONT);
+                }
+            }
+        });
+        //打开相册
+        findViewById(R.id.iv_photos).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //调用有返回值的相册
+                /*Intent i = new Intent(Intent.ACTION_PICK,null);
+                i.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                startActivity(i);*//*
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                context.startActivity(intent);*/
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_PICK);
+//      intent.setType("image/*");
+//      startActivityForResult(intent, 500);
+                //直接调用打开相册
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setType("image/*");
+                startActivity(intent);
+            }
+        });
 
+        mSharedPreferences = getSharedPreferences("camera", MODE_PRIVATE);
+        b_voice_switch = mSharedPreferences.getBoolean("sh_voice_switch",true);
+        b_watermark_switch = mSharedPreferences.getBoolean("sh_watermark_switch",true);
+        b_abtain_switch = mSharedPreferences.getBoolean("sh_abtain_switch",true);
+        b_place_switch = mSharedPreferences.getBoolean("sh_watermark_projectadd",true);
+        b_titileShow_switch = mSharedPreferences.getBoolean("sh_titileShow_switch",true);
+        b_projectname_switch = mSharedPreferences.getBoolean("sh_watermark_projectname",true);
+        b_add_switch = mSharedPreferences.getBoolean("sh_watermark_add",true);
+        b_content = mSharedPreferences.getBoolean("sh_content",true);
+        b_time_switch = mSharedPreferences.getBoolean("sh_watermark_projecttime",true);
+        b_longitude_switch = mSharedPreferences.getBoolean("sh_watermark_longitude",true);
+        b_weather_switch = mSharedPreferences.getBoolean("sh_watermark_weather",true);
+        background_color_depth_flag = mSharedPreferences.getInt("background_color_depth_flag",1);
+        background_color = mSharedPreferences.getInt("background_color",-1);
+        //front_color_flag = mSharedPreferences.getInt("front_color_flag",-1);
+        front_color = mSharedPreferences.getInt("front_color",-1);
+        front_size_flag = mSharedPreferences.getInt("front_size_flag",-1);
+        str_abtain = mSharedPreferences.getString("et_abtainCompany","str_取证单位");
+        str_projectname = mSharedPreferences.getString("et_projectName","str_项目名称");
+        //str_location = mSharedPreferences.getString("et_location","str_位置信息");
+        str_content = mSharedPreferences.getString("et_content","str_作业内容");
+        str_titileShow = mSharedPreferences.getString("et_titileShow","str_作业内容");
+        str_place = mSharedPreferences.getString("et_projectAdd","str_施工单位");
+        //str_time = mSharedPreferences.getString("et_time","");
+        //str_longitude_latitude = mSharedPreferences.getString("et_longitude_latitude","");
+        iniData();
     }
 
     @Override
@@ -329,26 +485,29 @@ public class MainActivity extends AppCompatActivity implements
                 if (mCameraView != null
                         && fragmentManager.findFragmentByTag(FRAGMENT_DIALOG) == null) {
                     final Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
-                    final AspectRatio currentRatio = mCameraView.getAspectRatio();
+                    AspectRatio currentRatio = mCameraView.getAspectRatio();
+                   /* if (is_16_9){
+                        currentRatio = AspectRatio.parse("16:9");
+                    }*/
                     AspectRatioFragment.newInstance(ratios, currentRatio)
                             .show(fragmentManager, FRAGMENT_DIALOG);
                 }
                 return true;
-            case R.id.switch_flash:
+           /* case R.id.switch_flash:
                 if (mCameraView != null) {
                     mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.length;
                     item.setTitle(FLASH_TITLES[mCurrentFlash]);
                     item.setIcon(FLASH_ICONS[mCurrentFlash]);
                     mCameraView.setFlash(FLASH_OPTIONS[mCurrentFlash]);
                 }
-                return true;
-            case R.id.switch_camera:
+                return true;*/
+            /*case R.id.switch_camera:
                 if (mCameraView != null) {
                     int facing = mCameraView.getFacing();
                     mCameraView.setFacing(facing == CameraView.FACING_FRONT ?
                             CameraView.FACING_BACK : CameraView.FACING_FRONT);
                 }
-                return true;
+                return true;*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -356,8 +515,19 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onAspectRatioSelected(@NonNull AspectRatio ratio) {
         if (mCameraView != null) {
-            Toast.makeText(this, ratio.toString(), Toast.LENGTH_SHORT).show();
+            mCameraView.setAdjustViewBounds(true);
             mCameraView.setAspectRatio(ratio);
+            /*if ( ratio.toString().equals("16:9")){
+                Toast.makeText(this, ratio.toString(), Toast.LENGTH_SHORT).show();
+                mCameraView.setAdjustViewBounds(false);
+                AspectRatio t_ratio = AspectRatio.parse("4:3");
+                mCameraView.setAspectRatio(t_ratio);
+                is_16_9 = true;
+            }else {
+                mCameraView.setAdjustViewBounds(true);
+                mCameraView.setAspectRatio(ratio);
+                is_16_9 = false;
+            }*/
         }
     }
 
@@ -390,6 +560,11 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
+//            if (is_16_9){
+//                mCameraView.setAdjustViewBounds(false);
+//                AspectRatio t_ratio = AspectRatio.parse("4:3");
+//                mCameraView.setAspectRatio(t_ratio);
+//            }
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             float bitmapWidth = bitmap.getWidth();
             float bitmapHeight = bitmap.getHeight();
@@ -410,28 +585,34 @@ public class MainActivity extends AppCompatActivity implements
                     paint_size = canvasTextSize4*ratio;
                     break;
             }
-            Log.d(TAG, "onPictureTaken_paint_size: "+paint_size+"");
             paint.setTextSize(paint_size);
             list_keyword.clear();
-            if (b_projectname_switch)
-                list_keyword.add("工程名称："+str_projectname);
             if (b_place_switch)
-                list_keyword.add("施工地点："+str_place);
-            if (b_weather_switch)
-                list_keyword.add("天\u3000\u3000气："+str_weather);
-            if (b_longitude_switch){
-                list_keyword.add("经\u3000\u3000度："+str_longitude);
-                list_keyword.add("纬\u3000\u3000度："+str_latitude);
-            }
+                list_keyword.add("施工单位："+str_place);
+            if (b_abtain_switch)
+                list_keyword.add("取证单位："+str_abtain);
+            if (b_projectname_switch)
+                list_keyword.add("项目名称："+str_projectname);
             if (b_add_switch)
-                list_keyword.add("^_^"+addressLine);
+                list_keyword.add("^_^"+str_location);
+            if (b_content){
+                list_keyword.add("作业内容："+str_content);
+            }
             if (b_time_switch)
-                list_keyword.add("时\u3000\u3000间："+str_time);
+                list_keyword.add("当前日期："+str_time);
+            if (b_longitude_switch){
+                list_keyword.add("经纬度数："+str_longitude_latitude);
+            }
+            if (b_weather_switch)
+                list_keyword.add("天气状况："+str_weather);
+//            if (b_titileShow_switch)
+//                list_keyword.add("^^^_^^^："+str_titileShow);
             if (!b_watermark_switch)
                 list_keyword.clear();
+            float paddingBottom = 100 * getPxRatio(bitmap.getWidth(), bitmap.getHeight());
             Bitmap toLeftBottom1 = ImageUtil.drawTextToLeftBottom(MainActivity.this, bitmap,
-                    list_keyword,
-                    paint,40*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),300*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),background_color_depth,background_color);
+                    list_keyword,b_titileShow_switch,str_titileShow,
+                    paint,40*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),paddingBottom,background_color_depth_flag,background_color);
             //imageView.setImageBitmap(toLeftBottom1);
 //            saveImage(toLeftBottom1);
 //            saveImageToGallery(toLeftBottom1);
@@ -633,12 +814,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
-            background_color = data.getExtras().getInt("background_color");  
+            background_color = data.getExtras().getInt("background_color");
             front_color = data.getExtras().getInt("front_color");
             str_projectname = "" + data.getExtras().getString("name");
             str_place = "" + data.getExtras().getString("add");
             str_time = "" + data.getExtras().getString("time");
-            front_size = data.getExtras().getInt("front_size");  
+            str_abtain = "" + data.getExtras().getString("et_abtainCompany");
+            front_size = data.getExtras().getInt("front_size");
             b_watermark_switch = data.getExtras().getBoolean("b_watermark_switch");  
             b_weather_switch = data.getExtras().getBoolean("b_weather_switch");  
             b_longitude_switch = data.getExtras().getBoolean("b_longitude_switch");  
@@ -646,9 +828,15 @@ public class MainActivity extends AppCompatActivity implements
             b_projectname_switch = data.getExtras().getBoolean("b_projectname_switch");  
             b_place_switch = data.getExtras().getBoolean("b_place_switch");  
             b_time_switch = data.getExtras().getBoolean("b_time_switch");  
-            b_custom_switch = data.getExtras().getBoolean("b_custom_switch");  
-            background_color_depth = data.getExtras().getInt(
-                    "background_color_depth");  
+            b_custom_switch = data.getExtras().getBoolean("b_custom_switch");
+            background_color_depth_flag = data.getExtras().getInt("background_color_depth");
+            b_voice_switch = data.getExtras().getBoolean("sh_voice_switch");
+            b_abtain_switch = data.getExtras().getBoolean("b_abtain_switch");
+            b_titileShow_switch = data.getExtras().getBoolean("b_titileShow_switch");
+            str_titileShow = data.getExtras().getString("et_titileShow");
+            str_content = data.getExtras().getString("et_content");
+            str_weather = data.getExtras().getString("et_weather");
+            str_location = data.getExtras().getString("et_location");
 
             if (!str_projectname.isEmpty()) {
                 tv_projectName.setText(str_projectname);
@@ -668,114 +856,137 @@ public class MainActivity extends AppCompatActivity implements
             if (front_size != -1) {
                 setFrontSize();
             }
-            //水印开关
-            if (b_watermark_switch){
-                ll_titile_background.setVisibility(View.VISIBLE);
-            }else {
-                ll_titile_background.setVisibility(View.INVISIBLE);
-            }
-            //天气开关
-            if (b_weather_switch){
-                ll_weather.setVisibility(View.VISIBLE);
-            }else {
-                ll_weather.setVisibility(View.GONE);
-            }
-            //经纬度开关
-            if (b_longitude_switch){
-                ll_logitude.setVisibility(View.VISIBLE);
-                ll_latitude.setVisibility(View.VISIBLE);
-            }else {
-                ll_logitude.setVisibility(View.GONE);
-                ll_latitude.setVisibility(View.GONE);
-            }
-            //地址开关
-            if (b_add_switch){
-                ll_add.setVisibility(View.VISIBLE);
-            }else {
-                ll_add.setVisibility(View.GONE);
-            }
-            //工程名称开关
-            if (b_projectname_switch){
-                ll_project_name.setVisibility(View.VISIBLE);
-            }else {
-                ll_project_name.setVisibility(View.GONE);
-            }
-            //施工地点开关
-            if (b_place_switch){
-                ll_place.setVisibility(View.VISIBLE);
-            }else {
-                ll_place.setVisibility(View.GONE);
-            }
-            //日期开关
-            if (b_time_switch){
-                ll_time.setVisibility(View.VISIBLE);
-            }else {
-                ll_time.setVisibility(View.GONE);
-            }
-            //自定义开关
-            if (b_custom_switch){
-                tv_custom.setVisibility(View.VISIBLE);
-            }else {
-                tv_custom.setVisibility(View.GONE);
-            }
+            iniData();
         }
+    }
+
+    private void iniData() {
+        //编辑内容
+        tv_abtain.setText(str_abtain);
+        tv_titile.setText(str_titileShow);
+        project_place.setText(str_place);
+        tv_projectName.setText(str_projectname);
+        tv_project_add.setText(str_location);
+        tv_content.setText(str_content);
+        project_time.setText(str_time);
+        project_logitude_latitude.setText(str_longitude_latitude);
+        project_weather.setText(str_weather);
+        //设置颜色深度 //设置背景色
+        setTitleBackgroundColor();
+        //设置字体颜色
+        setTitleColor();
+        //设置字体大小
+        setFrontSize();
+        //水印开关
+        if (b_watermark_switch){
+            ll_titile_background.setVisibility(View.VISIBLE);
+        }else {
+            ll_titile_background.setVisibility(View.INVISIBLE);
+        }
+        //标题是否显示
+        if (b_titileShow_switch){
+            tv_titile.setVisibility(View.VISIBLE);
+        }else{
+            tv_titile.setVisibility(View.GONE);
+        }
+        //施工单位开关
+        if (b_place_switch){
+            ll_place.setVisibility(View.VISIBLE);
+        }else {
+            ll_place.setVisibility(View.GONE);
+        }
+        //取证单位
+        if (b_abtain_switch){
+            ll_abtain.setVisibility(View.VISIBLE);
+        }else{
+            ll_abtain.setVisibility(View.GONE);
+        }
+        //项目名称开关
+        if (b_projectname_switch){
+            ll_project_name.setVisibility(View.VISIBLE);
+        }else {
+            ll_project_name.setVisibility(View.GONE);
+        }
+        //位置信息开关
+        if (b_add_switch){
+            ll_add.setVisibility(View.VISIBLE);
+        }else {
+            ll_add.setVisibility(View.GONE);
+        }
+        //作业内容开关
+        if(b_content){
+            ll_content.setVisibility(View.VISIBLE);
+        }else{
+            ll_content.setVisibility(View.GONE);
+        }
+        //当前日期开关
+        if (b_time_switch){
+            ll_time.setVisibility(View.VISIBLE);
+        }else {
+            ll_time.setVisibility(View.GONE);
+        }
+        //经纬度数开关
+        if (b_longitude_switch){
+            ll_logitude.setVisibility(View.VISIBLE);
+        }else {
+            ll_logitude.setVisibility(View.GONE);
+        }
+        //天气状况开关
+        if (b_weather_switch){
+            ll_weather.setVisibility(View.VISIBLE);
+        }else {
+            ll_weather.setVisibility(View.GONE);
+        }
+        if (b_custom_switch){
+            tv_custom.setVisibility(View.VISIBLE);
+        }else {
+            tv_custom.setVisibility(View.GONE);
+        }
+
     }
 
     private void setFrontSize() {
         switch (front_size) {
             case 0:
-                float dimension = getResources().getDimension(R.dimen.px_7);
-                project_weather.setTextSize(dimension);
-                project_logitude.setTextSize(dimension);
-                project_latitue.setTextSize(dimension);
-                project_altitude.setTextSize(dimension);
-                tv_fixed_add.setTextSize(dimension);
-                tv_projectAdd.setTextSize(dimension);
-                tv_projectName.setTextSize(dimension);
-                project_place.setTextSize(dimension);
-                project_time.setTextSize(dimension);
+                float dimension = getResources().getDimension(R.dimen.px_text_7);
+                specificFrontSize(dimension);
                 break;
             case 1:
-                float dimension1 = getResources().getDimension(R.dimen.px_8);
-                project_weather.setTextSize(dimension1);
-                project_logitude.setTextSize(dimension1);
-                project_latitue.setTextSize(dimension1);
-                project_altitude.setTextSize(dimension1);
-                tv_fixed_add.setTextSize(dimension1);
-                tv_projectAdd.setTextSize(dimension1);
-                tv_projectName.setTextSize(dimension1);
-                project_place.setTextSize(dimension1);
-                project_time.setTextSize(dimension1);
+                float dimension1 = getResources().getDimension(R.dimen.px_text_8);
+                specificFrontSize(dimension1);
                 break;
             case 2:
-                float dimension2 = getResources().getDimension(R.dimen.px_9);
-                project_weather.setTextSize(dimension2);
-                project_logitude.setTextSize(dimension2);
-                project_latitue.setTextSize(dimension2);
-                project_altitude.setTextSize(dimension2);
-                tv_fixed_add.setTextSize(dimension2);
-                tv_projectAdd.setTextSize(dimension2);
-                tv_projectName.setTextSize(dimension2);
-                project_place.setTextSize(dimension2);
-                project_time.setTextSize(dimension2);
+                float dimension2 = getResources().getDimension(R.dimen.px_text_9);
+                specificFrontSize(dimension2);
                 break;
             case 3:
-                float dimension3 = getResources().getDimension(R.dimen.px_10);
-                project_weather.setTextSize(dimension3);
-                project_logitude.setTextSize(dimension3);
-                project_latitue.setTextSize(dimension3);
-                project_altitude.setTextSize(dimension3);
-                tv_fixed_add.setTextSize(dimension3);
-                tv_projectAdd.setTextSize(dimension3);
-                tv_projectName.setTextSize(dimension3);
-                project_place.setTextSize(dimension3);
-                project_time.setTextSize(dimension3);
+                float dimension3 = getResources().getDimension(R.dimen.px_text_10);
+                specificFrontSize(dimension3);
                 break;
         }
     }
 
+    private void specificFrontSize(float dimension) {
+        project_weather.setTextSize(dimension);
+        tv_fixed_add.setTextSize(dimension);
+        jtv_weather.setTextSize(dimension);
+        project_logitude_latitude.setTextSize(dimension);
+        jtv_logitude.setTextSize(dimension);
+        jtv_time.setTextSize(dimension);
+        tv_content.setTextSize(dimension);
+        jtv_content.setTextSize(dimension);
+        jtv_projectName.setTextSize(dimension);
+        tv_abtain.setTextSize(dimension);
+        jtv_abtain.setTextSize(dimension);
+        jtv_place.setTextSize(dimension);
+        tv_projectAdd.setTextSize(dimension);
+        tv_projectName.setTextSize(dimension);
+        project_place.setTextSize(dimension);
+        project_time.setTextSize(dimension);
+    }
+
     private void setTitleBackgroundColor() {
-        switch (background_color_depth) {
+        switch (background_color_depth_flag) {
             case 0:
                 ll_titile_background.setBackgroundColor(
                         getResources().getColor(R.color.titi_background_color_white_transparent));
@@ -882,10 +1093,17 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setTitleColor() {
         project_weather.setTextColor(front_color);
-        project_logitude.setTextColor(front_color);
-        project_latitue.setTextColor(front_color);
-        project_altitude.setTextColor(front_color);
         tv_fixed_add.setTextColor(front_color);
+        jtv_weather.setTextColor(front_color);
+        project_logitude_latitude.setTextColor(front_color);
+        jtv_logitude.setTextColor(front_color);
+        jtv_time.setTextColor(front_color);
+        tv_content.setTextColor(front_color);
+        jtv_content.setTextColor(front_color);
+        jtv_projectName.setTextColor(front_color);
+        tv_abtain.setTextColor(front_color);
+        jtv_abtain.setTextColor(front_color);
+        jtv_place.setTextColor(front_color);
         tv_projectAdd.setTextColor(front_color);
         tv_projectName.setTextColor(front_color);
         project_place.setTextColor(front_color);
@@ -998,10 +1216,10 @@ public class MainActivity extends AppCompatActivity implements
                             String str2 =((Address) places.get(0)).getAddressLine(1) + "" ;
                             String str3 = ((Address) places.get(0)).getAddressLine(2) + "" ;
                             mLocality = ((Address) places.get(0)).getLocality();
-                            addressLine = str1+str3;
+                            str_location = (str1+str3).replace("null","");
                         }
                         //不为空,显示地理位置经纬度
-                        tv_projectAdd.setText(addressLine);
+                        tv_projectAdd.setText(str_location);
                     }
                     break;
                 }
@@ -1030,9 +1248,9 @@ public class MainActivity extends AppCompatActivity implements
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
                 str_longitude = ""+lng;
-                project_logitude.setText(str_longitude);
                 str_latitude  = ""+lat;
-                project_latitue.setText(str_latitude);
+                str_longitude_latitude = str_longitude+"/"+str_latitude;
+                project_logitude_latitude.setText(str_longitude_latitude);
                 final Geocoder geocoder = new Geocoder(MainActivity.this);
                 final List[] places = {null};
                 //  ！！！！！华为 安卓8.0 需要放在子线程中获取 ！！！！
@@ -1046,13 +1264,13 @@ public class MainActivity extends AppCompatActivity implements
                                 Address tempAddress = getAddress(MainActivity.this,location.getLatitude(),location.getLongitude());
                                 String str1 = tempAddress.getAddressLine(0);
                                 String str2 = tempAddress.getAddressLine(2);
-                                addressLine = str1+str2;
+                                str_location = (str1+str2).replace("null","");
                                 Message msg = new Message();
                                 msg.what = COMPLETED;
                                 handler.sendMessage(msg);
                                 //更新UI等
                                 Looper.prepare();
-                                Log.d(TAG, "Looper_addressLine: "+addressLine);
+                                //Log.d(TAG, "Looper_addressLine: "+str_location);
                                 //Toast.makeText(MainActivity.this,addressLine,Toast.LENGTH_LONG).show();
                                 //tv_projectAdd.setText(addressLine);
                                 Looper.loop();
@@ -1068,12 +1286,12 @@ public class MainActivity extends AppCompatActivity implements
                 if (places[0] != null && places[0].size() > 0) {
                     //一下的信息将会具体到某条街
                     //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
-                    addressLine = ((Address) places[0].get(0)).getAddressLine(0) + ""
+                    str_location = ((Address) places[0].get(0)).getAddressLine(0) + ""
                             + ((Address) places[0].get(0)).getAddressLine(2);
                     mLocality = ((Address) places[0].get(0)).getLocality();
                 }
                 //不为空,显示地理位置经纬度
-                tv_projectAdd.setText(addressLine);
+                tv_projectAdd.setText(str_location.replace("null",""));
                 UrlHttpUtil.get(HTTP_PRE + "娄底", new CallBackUtil.CallBackString() {
                     @Override
                     public void onFailure(int code, String errorMessage) {
@@ -1144,15 +1362,16 @@ public class MainActivity extends AppCompatActivity implements
                                 // placename=((Address)places.get(0)).getLocality();
                                 //一下的信息将会具体到某条街
                                 //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
-                                addressLine = ((Address) places.get(0)).getAddressLine(0) + ""
+                                str_location = ((Address) places.get(0)).getAddressLine(0) + ""
                                         //+ ((Address) places.get(0)).getAddressLine(1) + ","
                                         + ","
                                         + ((Address) places.get(0)).getAddressLine(2);
                                 mLocality = ((Address) places.get(0)).getLocality();
+                                str_location = str_location.replace("null","");
                             }
                             //不为空,显示地理位置经纬度
                             //Toast.makeText(MainActivity.this,  "city:"+placename, Toast.LENGTH_SHORT).show();
-                            tv_projectAdd.setText(addressLine);
+                            tv_projectAdd.setText(str_location);
                         }
                     }catch (SecurityException e){
                         e.printStackTrace();
@@ -1192,8 +1411,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         return null;
     }
-
-
 
     private static int baseBitmapWidth = 1080;//在拍出照片的bitmap为1080*1920的真机下测试
     private static int baseBitmapHeight = 1920;

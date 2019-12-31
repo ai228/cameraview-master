@@ -62,7 +62,7 @@ public class AspectRatio implements Comparable<AspectRatio>, Parcelable {
     }
 
     /**
-     * Parse an {@link AspectRatio} from a {@link String} formatted like "16:9".
+     * Parse an {@link AspectRatio} from a {@link String} formatted like "4:3".
      *
      * @param s The string representation of the aspect ratio
      * @return The aspect ratio

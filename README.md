@@ -37,7 +37,7 @@ Requires API Level 9. The library uses Camera 1 API on API Level 9-20 and Camera
     android:keepScreenOn="true"
     android:adjustViewBounds="true"
     app:autoFocus="true"
-    app:aspectRatio="16:9"
+    app:aspectRatio="4:3"
     app:facing="back"
     app:flash="auto"/>
 ```

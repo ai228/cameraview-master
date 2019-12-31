@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_titile_background"
+    android:layout_alignBottom="@id/camera"
+    android:orientation="vertical"
+    android:layout_marginLeft="6dp"
+    android:layout_width="300dp"
+    android:background="#1Affffff"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="6dp"
+    tools:showIn="@layout/activity_main">
+
+    <TextView
+        android:id="@+id/tv_titile"
+        android:text="@string/str_main_titile"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:layout_width="match_parent"
+        android:background="@color/them_color_green"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/ll_place"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_place"
+            android:text="@string/jtv_place"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/project_place"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_abtain"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_abtain"
+            android:text="@string/jtv_abtain"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_abtain"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_project_name"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_projectName"
+            android:text="@string/jtv_project_name"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/project_name"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_add"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/tv_fixed_add"
+            android:text="@string/jtv_address"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/project_add"
+            android:text=""
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_content"
+            android:text="@string/str_content"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_content"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_time"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:text="@string/jtv_time"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/project_time"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_logitude"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_logitude"
+            android:text="@string/jtv_logitude_latitude"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/project_logitude_latitude"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_weather"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:id="@+id/jtv_weather"
+            android:text="@string/jtv_weather"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/project_weather"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!--<LinearLayout
+        android:id="@+id/ll_latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.cameraview.demo.JustifyTextView
+            android:text="@string/jtv_latitude"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="@dimen/px_130"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/project_latitue"
+            android:textSize="@dimen/px_text_24"
+            android:textColor="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <com.google.android.cameraview.demo.JustifyTextView
+        android:id="@+id/project_altitude"
+        android:text="@string/jtv_altitude"
+        android:textSize="@dimen/px_text_24"
+        android:visibility="gone"
+        android:textColor="#ffffff"
+        android:layout_width="@dimen/px_130"
+        android:layout_height="wrap_content" />
+-->
+    <TextView
+        android:id="@+id/tv_custom"
+        android:textSize="@dimen/px_text_24"
+        android:textColor="#ffffff"
+        android:visibility="gone"
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

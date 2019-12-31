@@ -57,8 +57,11 @@ import java.util.List;
 @SuppressLint("SimpleDateFormat")
 public class ImageUtil {
 	private static Paint mPaint;
+	private static Paint titilePaint;
+	private static Paint titileTextPaint;
+    private static int sADD_line_contents;
 
-	/**
+    /**
 	 * 图片压缩，按比例大小压缩方法
 	 */
 	public static Bitmap comp(Bitmap image) {
@@ -155,18 +158,18 @@ public class ImageUtil {
 	 * 绘制文字到左下方
 	 */
 	public static Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,
-            List<String> list_keywords,
+            List<String> list_keywords,boolean b_titileShow_switch,String str_titileShow,
             Paint paint, float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
 		int width = bitmap.getWidth();
 		int height = bitmap.getHeight();
-		Log.d(TAG, "drawTextToLeftBottom: "+width+height);
-		return drawTextToBitmap(context,bitmap, list_keywords, paint,paddingLeft,bitmap.getHeight() - paddingBottom,background_color_depth,background_color);
+		Log.d(TAG, "drawTextToLeftBottom: "+width+"----"+height);
+		return drawTextToBitmap(context,bitmap, list_keywords,b_titileShow_switch,str_titileShow, paint,paddingLeft,bitmap.getHeight() - paddingBottom,background_color_depth,background_color);
 	}
 
 	//图片上绘制文字
 	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap,
-            List<String> list_keywords,
-            Paint paint,float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
+        List<String> list_keywords,boolean b_titileShow_switch,String str_titileShow,
+        Paint paint,float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
 		Config bitmapConfig = bitmap.getConfig();
 		paint.setDither(true); // 获取清晰的图像采样
 		paint.setFilterBitmap(true);// 过滤一些
@@ -178,12 +181,16 @@ public class ImageUtil {
         Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint_title.setColor(Color.rgb(252, 100, 8));
         paint_title.setTextSize(100* MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()));
-        canvas.drawText("电企通相机", paddingLeft,175*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), paint_title);
+        //canvas.drawText("电企通相机", paddingLeft,175*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), paint_title);
 		Rect rect = new Rect();
 		if (list_keywords.size()>0){
             paint.getTextBounds(list_keywords.get(0), 0, list_keywords.get(0).length(), rect);//获取字体的外边框
             int h = rect.height()+15;//行与行之间的间距
             mPaint = new Paint();
+			titilePaint = new Paint();
+			titileTextPaint = new Paint();
+			titilePaint.setColor(context.getResources().getColor(R.color.them_color_green));
+            titileTextPaint.setColor(context.getResources().getColor(R.color.white));
             switch (background_color_depth) {//先做颜色的深度选择，再进行颜色的选择
                 case 0:
                     mPaint.setColor(
@@ -295,27 +302,89 @@ public class ImageUtil {
                 if (str.startsWith("^_^")){// 以^_^开头的字符串说明是长字符串地址
                 	str = str.substring(3);
                 	if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
+                        sADD_line_contents = 3;
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_middlie = str.substring(singleLine_textSize,singleLine_textSize*2);
 						String substring_end = str.substring(singleLine_textSize*2);
-						canvas.drawText("地         址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("位置信息："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
 						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_middlie, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
 						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
 					}else if (str.length()>singleLine_textSize){//地址大于12个字小于24个字的，显示为两行
+                        sADD_line_contents = 2;
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_end = str.substring(singleLine_textSize);
-						canvas.drawText("地\u3000\u3000址："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
+						canvas.drawText("位置信息："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
 						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
 					}else {//其他情况一行显示
-						canvas.drawText("地\u3000\u3000址："+str, paddingLeft, paddingBottom-paddingBottom-(list_keywords.size()-i-j)*h, paint);
+                        sADD_line_contents = 1;
+						canvas.drawText("位置信息："+str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
 					}
-				}else{//其他信息情况
+				}else {//其他信息情况
 					canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
-				}
+                }
             }// for,,,end
 			// 背景画布
-			canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), paddingBottom-(list_keywords.size()+j)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()), 4*(bitmap.getWidth()/5), paddingBottom+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
+            if (sADD_line_contents == 3){
+                canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						paddingBottom-(list_keywords.size()+j-1)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						4*(bitmap.getWidth()/5), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
+            }else if (sADD_line_contents ==2){
+                canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						paddingBottom-(list_keywords.size()+j)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						4*(bitmap.getWidth()/5), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
+            }else{
+                canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						paddingBottom-(list_keywords.size()+j+1)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						4*(bitmap.getWidth()/5), paddingBottom), mPaint);
+            }
+			Rect rect1;
+			if (b_titileShow_switch){
+				switch (sADD_line_contents){
+					case 3:
+						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+								paddingBottom-(list_keywords.size()+j-1)*h,
+								4*(bitmap.getWidth()/5), paddingBottom-(list_keywords.size()+(j-2))*h), titilePaint);*/
+						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
+								(int) paddingBottom-(list_keywords.size()+j-1)*h,
+								(int) 4*(bitmap.getWidth()/5),
+								(int) paddingBottom-(list_keywords.size()+(j-2))*h);
+						break;
+					case 2:
+						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+								paddingBottom-(list_keywords.size()+(j+1))*h,
+								4*(bitmap.getWidth()/5), paddingBottom-(list_keywords.size()+(j))*h), titilePaint);*/
+						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
+								(int)paddingBottom-(list_keywords.size()+(j+1))*h,
+								(int) 4*(bitmap.getWidth()/5),
+								(int) paddingBottom-(list_keywords.size()+(j))*h);
+						break;
+					default:
+						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
+								(int) paddingBottom-(list_keywords.size()+j+2)*h,
+								(int) 4*(bitmap.getWidth()/5),
+								(int) paddingBottom-(list_keywords.size()+(j+1))*h);
+						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+								paddingBottom-(list_keywords.size()+j+2)*h,
+								4*(bitmap.getWidth()/5), paddingBottom-(list_keywords.size()+(j+1))*h), titilePaint);*/
+						break;
+				}
 
+				Paint rectPaint = new Paint();
+				rectPaint.setColor(context.getResources().getColor(R.color.them_color_green));
+				rectPaint.setStyle(Paint.Style.FILL);
+				canvas.drawRect(rect1, rectPaint);
+				titileTextPaint.setStyle(Paint.Style.FILL);
+				//该方法即为设置基线上那个点究竟是left,center,还是right  这里我设置为center
+				titileTextPaint.setTextAlign(Paint.Align.CENTER);
+				Paint.FontMetrics fontMetrics = titileTextPaint.getFontMetrics();
+				float top = fontMetrics.top;//为基线到字体上边框的距离,即上图中的top
+				float bottom = fontMetrics.bottom;//为基线到字体下边框的距离,即上图中的bottom
+
+				float baseLineY = (rect1.centerY() - top*2 +bottom*2);//基线中间点的y轴计算公式
+				titileTextPaint.setTextSize(paint.getTextSize());
+				canvas.drawText(str_titileShow, rect1.centerX(), baseLineY, titileTextPaint);
+				//canvas.drawText(""+str_titileShow, paddingLeft, paddingBottom-(list_keywords.size()+j)*h, titileTextPaint);
+			}
         }// if,,,end
 		return bitmap;
 	}

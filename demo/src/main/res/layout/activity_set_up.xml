@@ -30,19 +30,20 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="#FC6408"
+            android:background="@color/them_color_backgroundgreen"
             android:layout_height="@dimen/px_120">
 
             <TextView
                 android:id="@+id/txt_left_title"
-                android:layout_marginTop="@dimen/px_35"
+                android:layout_marginTop="@dimen/px_40"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:drawableLeft="@mipmap/icon_left"
+                android:drawableLeft="@drawable/icon_left"
                 android:gravity="center"
                 android:singleLine="true"
                 android:padding="@dimen/px_20"
+                android:paddingTop="@dimen/px_10"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:visibility="visible"/>

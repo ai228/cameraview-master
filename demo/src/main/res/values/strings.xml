@@ -22,16 +22,20 @@
     <string name="flash_off">Flash off</string>
     <string name="flash_on">Flash on</string>
     <string name="title_activity_set_up">SetUpActivity</string>
-    <string name="project_name">工程名称</string>
+    <string name="project_name">项目名称</string>
     <string name="title">电企通相机</string>
-    <string name="str_main_titile">标题</string>
-    <string name="jtv_project_name">工程名称：</string>
-    <string name="jtv_place">施工地点：</string>
-    <string name="jtv_weather">天气：</string>
+    <string name="str_main_titile">施工记录</string>
+    <string name="jtv_project_name">项目名称：</string>
+    <string name="jtv_place">施工单位：</string>
+    <string name="jtv_weather">天气状况：</string>
     <string name="jtv_logitude">经度：</string>
     <string name="jtv_latitude">纬度：</string>
-    <string name="jtv_time">时间：</string>
-    <string name="jtv_address">地址：</string>
+    <string name="jtv_time">当前日期：</string>
+    <string name="jtv_address">位置信息：</string>
     <string name="jtv_altitude">海拔：103.53米</string>
+    <string name="fun_setting">功能设置</string>
+    <string name="jtv_abtain">取证单位：</string>
+    <string name="str_content">作业内容：</string>
+    <string name="jtv_logitude_latitude">经纬度数：</string>
 
 </resources>

@@ -19,19 +19,76 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#F1F2F7"
+    android:background="@color/them_color_backgroundgreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.activity.SetUpActivity"
     tools:showIn="@layout/activity_set_up">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="@string/fun_setting"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp" />
+        </RelativeLayout>
+        <include layout="@layout/dividing_line" />
+        <RelativeLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="声音开关"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Switch
+                android:id="@+id/sh_voice_switch"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="@dimen/px_20"
+                android:checked="true"
+                android:layout_marginTop="20dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <View
+            android:background="#117379"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_3"/>
         <RelativeLayout
                 android:id="@+id/rl_1"
-                android:background="#ffffff"
+                android:background="@color/them_color_backgroundgreen"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -42,7 +99,8 @@
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/px_text_30"
+                    android:textColor="#ffffff"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -51,73 +109,352 @@
                     android:id="@+id/sh_watermark_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:switchMinWidth="40dp"
+                    android:switchMinWidth="@dimen/px_20"
                     android:checked="true"
                     android:layout_marginTop="20dp"
                     android:thumb="@drawable/switch_custom_thumb_selector"
                     android:track="@drawable/switch_custom_track_selector"
                    android:layout_alignParentRight="true"/>
         </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_2"
-            android:background="#ffffff"
-            android:layout_marginTop="10dp"
+        <View
+            android:background="#117379"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_3"/>
+        <LinearLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_1"
+            android:layout_below="@id/rl_6"
             tools:ignore="MissingConstraints">
             <TextView
-                android:text="天气"
+                android:text="取证单位"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <Switch
-                android:layout_marginRight="10dp"
-                android:id="@+id/sh_watermark_weather"
+
+            <EditText
+                android:id="@+id/et_abtainCompany"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:switchMinWidth="40dp"
                 android:layout_marginTop="20dp"
-                android:thumb="@drawable/switch_custom_thumb_selector"
-                android:track="@drawable/switch_custom_track_selector"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
+                android:layout_marginLeft="@dimen/px_15"
+                android:textColor="#ffffff"
+                android:layout_weight="1"
+                />
 
-        <RelativeLayout
-            android:id="@+id/rl_3"
-            android:background="#ffffff"
+            <Switch
+                android:id="@+id/sh_abtain_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:checked="true"
+                android:switchMinWidth="30dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector" />
+        </LinearLayout>
+        <View
+            android:background="#117379"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_3"/>
+        <LinearLayout
+            android:id="@+id/ll_8"
+            android:background="@color/them_color_backgroundgreen"
             android:layout_marginTop="2dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_2"
+            android:layout_below="@id/rl_7"
             tools:ignore="MissingConstraints">
             <TextView
-                android:text="经纬度"
+                android:text="施工单位"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/et_projectAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="@dimen/px_15"
+                />
+            <Switch
+                android:id="@+id/sh_watermark_projectadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="40dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:layout_marginRight="10dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+
+        <include layout="@layout/dividing_line" />
+
+        <LinearLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="显示标题"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp" />
+
+            <EditText
+                android:id="@+id/et_titileShow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/px_15"
+                />
+            <Switch
+                android:id="@+id/sh_titileShow_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="30dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:layout_marginRight="10dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/rl_7"
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_6"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="@string/project_name"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/et_projectName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/px_15"
+                />
+            <Switch
+                android:id="@+id/sh_watermark_projectname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="30dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:layout_marginRight="10dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+        <include layout="@layout/dividing_line" />
+        <LinearLayout
+            android:id="@+id/rl_5"
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="位置信息"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/px_text_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/et_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/px_15"
+                />
             <Switch
                 android:layout_marginRight="10dp"
-                android:id="@+id/sh_watermark_longitude"
+                android:id="@+id/sh_watermark_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="40dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+        <include layout="@layout/dividing_line" />
+        <LinearLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="作业内容"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp" />
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="@dimen/px_15"
+                android:layout_weight="1"/>
+            <Switch
+                android:id="@+id/sh_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="30dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:layout_marginRight="10dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+        <include layout="@layout/dividing_line" />
+        <LinearLayout
+            android:id="@+id/ll_9"
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_8"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="当前日期"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:layout_width="wrap_content"
+                android:textColor="#ffffff"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:id="@+id/et_projectTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/px_15"
+                android:textColor="#ffffff"/>
+            <Switch
+                android:id="@+id/sh_watermark_projecttime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:switchMinWidth="40dp"
                 android:checked="true"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
                 android:thumb="@drawable/switch_custom_thumb_selector"
                 android:track="@drawable/switch_custom_track_selector"
                 android:layout_alignParentRight="true"/>
-        </RelativeLayout>
+        </LinearLayout>
+        <include layout="@layout/dividing_line" />
+        <LinearLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:text="经纬度数"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp" />
+            <EditText
+                android:id="@+id/et_longitude_latitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="@dimen/px_15"
+                android:textColor="#ffffff"
+                android:layout_weight="1"/>
+            <Switch
+                android:id="@+id/sh_watermark_longitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="30dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:layout_marginRight="10dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rl_4"
@@ -127,14 +464,13 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_3"
             tools:ignore="MissingConstraints">
             <TextView
                 android:text="海拔"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Switch
@@ -149,35 +485,9 @@
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/rl_5"
-            android:background="#ffffff"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rl_4"
-            tools:ignore="MissingConstraints">
-            <TextView
-                android:text="地址"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <Switch
-                android:layout_marginRight="10dp"
-                android:id="@+id/sh_watermark_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:switchMinWidth="40dp"
-                android:layout_marginTop="20dp"
-                android:checked="true"
-                android:thumb="@drawable/switch_custom_thumb_selector"
-                android:track="@drawable/switch_custom_track_selector"
-                android:layout_alignParentRight="true"/>
-        </RelativeLayout>
+<!--
+        <include layout="@layout/dividing_line" />
+-->
 
         <RelativeLayout
             android:id="@+id/rl_6"
@@ -194,7 +504,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <Switch
@@ -208,122 +518,47 @@
                 android:track="@drawable/switch_custom_track_selector"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
-
+        <include layout="@layout/dividing_line" />
         <LinearLayout
-            android:id="@+id/rl_7"
-            android:background="#ffffff"
-            android:layout_marginTop="2dp"
+            android:id="@+id/rl_2"
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_6"
+            android:layout_below="@id/rl_1"
             tools:ignore="MissingConstraints">
             <TextView
-                android:text="@string/project_name"
+                android:text="天气状况"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
             <EditText
-                android:id="@+id/et_projectName"
+                android:id="@+id/et_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                />
+                android:textColor="#ffffff"
+                android:layout_marginLeft="@dimen/px_15"
+                android:layout_weight="1"/>
             <Switch
-                android:id="@+id/sh_watermark_projectname"
+                android:layout_marginRight="10dp"
+                android:id="@+id/sh_watermark_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:switchMinWidth="40dp"
                 android:layout_marginTop="20dp"
-                android:checked="true"
-                android:layout_marginRight="10dp"
                 android:thumb="@drawable/switch_custom_thumb_selector"
                 android:track="@drawable/switch_custom_track_selector"
                 android:layout_alignParentRight="true"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_8"
-            android:background="#ffffff"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rl_7"
-            tools:ignore="MissingConstraints">
-            <TextView
-                android:text="施工地点"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                android:id="@+id/et_projectAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                />
-            <Switch
-                android:id="@+id/sh_watermark_projectadd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:switchMinWidth="40dp"
-                android:layout_marginTop="20dp"
-                android:checked="true"
-                android:layout_marginRight="10dp"
-                android:thumb="@drawable/switch_custom_thumb_selector"
-                android:track="@drawable/switch_custom_track_selector"
-                android:layout_alignParentRight="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_9"
-            android:background="#ffffff"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll_8"
-            tools:ignore="MissingConstraints">
-            <TextView
-                android:text="日         期"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <EditText
-                android:id="@+id/et_projectTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                />
-            <Switch
-                android:id="@+id/sh_watermark_projecttime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:switchMinWidth="40dp"
-                android:checked="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:thumb="@drawable/switch_custom_thumb_selector"
-                android:track="@drawable/switch_custom_track_selector"
-                android:layout_alignParentRight="true"/>
-        </LinearLayout>
+        <include layout="@layout/dividing_line" />
 
         <LinearLayout
             android:id="@+id/ll_10"
@@ -332,13 +567,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_9"
+            android:background="@color/them_color_backgroundgreen"
             tools:ignore="MissingConstraints">
             <TextView
                 android:text="标题底色"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -346,11 +583,11 @@
         <LinearLayout
             android:id="@+id/ll_11"
             android:padding="10dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="-20dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="@color/them_color_backgroundgreen"
             android:layout_below="@id/ll_10"
             tools:ignore="MissingConstraints">
 
@@ -358,14 +595,14 @@
                 android:id="@+id/ll_titlecolor_1"
                 android:layout_marginLeft="7dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
                     android:id="@+id/iv_titilecolor_1"
                     android:layout_width="match_parent"
-                    android:background="#F6F5F5"
+                    android:background="#ffffff"
                     android:layout_height="match_parent"/>
             </LinearLayout>
 
@@ -373,9 +610,9 @@
                 android:id="@+id/ll_titlecolor_2"
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
+                android:background="@color/them_color_backgroundgreen"
                 android:alpha="1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -389,8 +626,8 @@
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
                 android:id="@+id/ll_titlecolor_3"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -404,8 +641,8 @@
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
                 android:id="@+id/ll_titlecolor_4"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -419,8 +656,8 @@
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
                 android:id="@+id/ll_titlecolor_5"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -434,8 +671,8 @@
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
                 android:id="@+id/ll_titlecolor_6"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -448,9 +685,9 @@
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
+                android:background="@color/them_color_backgroundgreen"
                 android:id="@+id/ll_titlecolor_7"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -462,7 +699,7 @@
 
         </LinearLayout>
 
-
+        <include layout="@layout/dividing_line"/>
         <LinearLayout
             android:id="@+id/ll_12"
             android:layout_marginTop="2dp"
@@ -476,7 +713,8 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -484,37 +722,38 @@
 
         <LinearLayout
             android:id="@+id/ll_13"
+            android:layout_marginTop="-20dp"
             android:padding="10dp"
-            android:layout_marginTop="2dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
+            android:background="@color/them_color_backgroundgreen"
             android:layout_below="@id/ll_12"
             tools:ignore="MissingConstraints">
 
             <LinearLayout
                 android:layout_marginLeft="7dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
+                android:background="@color/them_color_backgroundgreen"
                 android:id="@+id/ll_fontcolor_1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
                     android:id="@+id/iv_fontcolor_1"
-                    android:layout_width="match_parent"
-                    android:background="#F6F5F5"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:layout_height="match_parent"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
+                android:background="@color/them_color_backgroundgreen"
                 android:alpha="1"
                 android:id="@+id/ll_fontcolor_2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -528,8 +767,8 @@
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
                 android:id="@+id/ll_fontcolor_3"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="40dp">
                 <ImageView
@@ -542,8 +781,8 @@
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:id="@+id/ll_fontcolor_4"
                 android:layout_height="40dp">
@@ -557,8 +796,8 @@
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:id="@+id/ll_fontcolor_5"
                 android:layout_height="40dp">
@@ -572,8 +811,8 @@
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:id="@+id/ll_fontcolor_6"
                 android:layout_weight="1"
                 android:layout_height="40dp">
@@ -587,8 +826,8 @@
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:padding="3dp"
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
+                android:background="@color/them_color_backgroundgreen"
+                android:layout_width="0dp"
                 android:id="@+id/ll_fontcolor_7"
                 android:layout_weight="1"
                 android:layout_height="40dp">
@@ -598,9 +837,8 @@
                     android:background="#AB68D9"
                     android:layout_height="match_parent"/>
             </LinearLayout>
-
         </LinearLayout>
-
+        <include layout="@layout/dividing_line" />
         <LinearLayout
             android:id="@+id/ll_14"
             android:layout_marginTop="2dp"
@@ -614,93 +852,53 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <com.google.android.cameraview.demo.FontsizeRaeSeekBar
+                android:id="@+id/seekBar_fontsize"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="@dimen/px_40"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:progressDrawable="@android:color/transparent"
+                android:theme="@style/Widget.AppCompat.SeekBar"
+                android:thumb="@drawable/seekbar_thumb_material_anim_font_setting" />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_15"
-            android:padding="1dp"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:layout_below="@id/ll_14"
-            tools:ignore="MissingConstraints">
-
-            <LinearLayout
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:layout_height="75dp">
-                <com.google.android.cameraview.demo.FontsizeRaeSeekBar
-                    android:id="@+id/seekBar_fontsize"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:progressDrawable="@android:color/transparent"
-                    android:theme="@style/Widget.AppCompat.SeekBar"
-                    android:thumb="@drawable/seekbar_thumb_material_anim_font_setting" />
-            </LinearLayout>
-
-        </LinearLayout>
-
+        <include layout="@layout/dividing_line"/>
         <LinearLayout
             android:id="@+id/ll_16"
             android:layout_marginTop="2dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_15"
             tools:ignore="MissingConstraints">
             <TextView
                 android:text="底色深浅"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <com.google.android.cameraview.demo.BackgoundcolorSeekBar
+                android:id="@+id/seekBar_backgroundcolor"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/px_40"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:progressDrawable="@android:color/transparent"
+                android:theme="@style/Widget.AppCompat.SeekBar"
+                android:thumb="@drawable/seekbar_thumb_material_anim_font_setting" />
         </LinearLayout>
 
-
-        <LinearLayout
-            android:id="@+id/ll_17"
-            android:padding="1dp"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:layout_below="@id/ll_16"
-            tools:ignore="MissingConstraints">
-
-            <LinearLayout
-                android:background="@drawable/im_frame_white"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:layout_height="75dp">
-                <com.google.android.cameraview.demo.BackgoundcolorSeekBar
-                    android:id="@+id/seekBar_backgroundcolor"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:progressDrawable="@android:color/transparent"
-                    android:theme="@style/Widget.AppCompat.SeekBar"
-                    android:thumb="@drawable/seekbar_thumb_material_anim_font_setting" />
-            </LinearLayout>
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_18"
@@ -710,17 +908,15 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_17"
             tools:ignore="MissingConstraints">
             <TextView
                 android:text="自定义"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="@dimen/px_text_30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -738,6 +934,7 @@
                 android:track="@drawable/switch_custom_track_selector"
                 android:layout_alignParentRight="true"/>
         </LinearLayout>
+        <include layout="@layout/dividing_line"/>
   <!--  <LinearLayout
             android:layout_marginTop="80dp"
             android:orientation="horizontal"
@@ -745,8 +942,8 @@
             android:layout_height="wrap_content"
             tools:ignore="MissingConstraints">
             <TextView
-                android:text="施工地点："
-                android:textSize="20sp"
+                android:text="施工地点："android:textSize="@dimen/px_text_30"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -759,21 +956,9 @@
 
 
 
-    <Button
-        android:id="@+id/save"
-        android:layout_below="@id/ll_18"
-        android:layout_alignParentBottom="true"
-        android:text="保存"
-        android:visibility="gone"
-        android:background="@color/badge_color"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-    </Button>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

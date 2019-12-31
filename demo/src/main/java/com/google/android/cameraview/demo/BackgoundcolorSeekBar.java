@@ -79,7 +79,7 @@ public class BackgoundcolorSeekBar extends AppCompatSeekBar {
         // 刻度文字的对齐方式为居中对齐
         mTickMarkTitlePaint.setTextAlign(Paint.Align.CENTER);
         // 刻度文字的字体颜色
-        mTickMarkTitlePaint.setColor(ContextCompat.getColor(getContext(), R.color.primaryDark));
+        mTickMarkTitlePaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
         // 设置最大刻度值为字体大小数组的长度
         setMax(mTextSize.length);
         // 设置当前的刻度
