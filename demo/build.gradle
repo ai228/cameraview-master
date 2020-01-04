@@ -25,8 +25,8 @@ android {
         applicationId 'com.google.android.cameraview.demo'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName '3.0.1'
+        versionCode 1
+        versionName '1.0.1'
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
 
@@ -34,12 +34,59 @@ android {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'x86'//, 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
-
+        flavorDimensions "versionCode" //友盟报错 All flavors must belong to a named flavor dimension
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+    //多渠道打包支持
+    productFlavors {
+        Tencent {//投放应用宝市场
+        }
+        Baidu {//投放百度市场
+        }
+        Wandoujia {//投放豌豆荚市场
+        }
+        Vivo {//投放vivo市场
+        }
+        Oppo {//投放oppo市场
+        }
+        Xiaomi {//投放小米市场
+        }
+        Meizu {//投放魅族市场
+        }
+        Huawei {//投放华为应用市场
+        }
+        Lenovo {//投放联想市场
+        }
+        Letv {//投放乐视市场
+        }
+        Gionee {//投放金立市场
+        }
+        HiMarket {//投放安卓市场
+        }
+    }
+    //注意我注释掉的，可以去掉注释，那样的话，下面这句就可以不用了
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
+    //修改后的命名规则
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def formattedDate = new Date().format('yyyy_MM_dd')
+            outputFileName = rootProject.getName()+"-"+variant.flavorName+"-"+buildType.name+"-"+formattedDate+"-v"+defaultConfig.versionName+"-"+ defaultConfig.versionCode+ ".apk";
         }
     }
 }
@@ -50,7 +97,6 @@ dependencies {
     implementation project(':library')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
-
     //注释掉原有bugly的仓库
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
@@ -58,8 +104,15 @@ dependencies {
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    /*友盟*/
     compile  'com.umeng.umsdk:analytics:8.0.0'
     compile  'com.umeng.umsdk:common:2.0.0'
+    //PushSDK必须依赖基础组件库，所以需要加入对应依赖
+    implementation 'com.umeng.umsdk:common:2.1.0'
+    //PushSDK必须依赖utdid库，所以需要加入对应依赖
+    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+    //PushSDK
+    implementation 'com.umeng.umsdk:push:6.0.1'
 }
 
 

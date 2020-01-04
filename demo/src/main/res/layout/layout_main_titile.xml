@@ -48,7 +48,7 @@
             android:text="@string/jtv_place"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/project_place"
@@ -67,7 +67,7 @@
             android:text="@string/jtv_abtain"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_abtain"
@@ -86,7 +86,7 @@
             android:text="@string/jtv_project_name"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/project_name"
@@ -106,7 +106,7 @@
             android:text="@string/jtv_address"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/project_add"
@@ -126,7 +126,7 @@
             android:text="@string/str_content"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_content"
@@ -145,7 +145,7 @@
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
             android:text="@string/jtv_time"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/project_time"
@@ -167,7 +167,7 @@
             android:text="@string/jtv_logitude_latitude"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -188,7 +188,7 @@
             android:text="@string/jtv_weather"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -209,7 +209,7 @@
             android:text="@string/jtv_latitude"
             android:textSize="@dimen/px_text_24"
             android:textColor="#ffffff"
-            android:layout_width="@dimen/px_130"
+            android:layout_width="@dimen/px_160"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -226,7 +226,7 @@
         android:textSize="@dimen/px_text_24"
         android:visibility="gone"
         android:textColor="#ffffff"
-        android:layout_width="@dimen/px_130"
+        android:layout_width="@dimen/px_160"
         android:layout_height="wrap_content" />
 -->
     <TextView

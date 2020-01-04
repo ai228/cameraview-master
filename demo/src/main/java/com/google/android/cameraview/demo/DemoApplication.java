@@ -16,11 +16,18 @@
 
 package com.google.android.cameraview.demo;
 
+import static com.umeng.message.UmengDownloadResourceService.TAG;
+
 import android.app.Application;
 import android.os.Environment;
+import android.util.Log;
 
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 
 public class DemoApplication extends Application {
     public static final String APP_ID = "ab8cf50692";
@@ -100,5 +107,39 @@ public class DemoApplication extends Application {
         /***** 统一初始化Bugly产品，包含Beta *****/
         Bugly.init(this, APP_ID, false);
 
+        /**
+         * 设置组件化的Log开关
+         * 参数: boolean 默认为false，如需查看LOG设置为true
+         */
+        UMConfigure.setLogEnabled(true);
+
+        /**
+         * 注意: 即使您已经在AndroidManifest.xml中配置过appkey和channel值，也需要在App代码中调
+         * 用初始化接口（如需要使用AndroidManifest.xml中配置好的appkey和channel值，
+         * UMConfigure.init调用中appkey和channel参数请置为null）。
+         */
+       // UMConfigure.init(this, "5e0b2e08cb23d2114c000ed6","Umeng",  UMConfigure.DEVICE_TYPE_PHONE, null);
+
+
+        UMConfigure.init(this, "5e0b2e08cb23d2114c000ed6", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "ac0943931db1ec8ea6a4e7df7415d3fd");
+        // 选用AUTO页面采集模式
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        //获取消息推送代理示例
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        //注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(new IUmengRegisterCallback() {
+
+            @Override
+            public void onSuccess(String deviceToken) {
+                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                Log.i(TAG,"注册成功：deviceToken：-------->  " + deviceToken);
+            }
+
+            @Override
+            public void onFailure(String s, String s1) {
+                Log.e(TAG,"注册失败：-------->  " + "s:" + s + ",s1:" + s1);
+            }
+        });
     }
+
 }

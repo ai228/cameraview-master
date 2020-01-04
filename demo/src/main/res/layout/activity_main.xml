@@ -112,6 +112,7 @@
         <ImageView
             android:layout_gravity="center_vertical"
             android:id="@+id/iv_photos"
+            android:visibility="invisible"
             android:layout_marginRight="@dimen/px_40"
             android:background="@color/primaryText"
             android:layout_height="@dimen/px_65"
@@ -122,13 +123,11 @@
             android:layout_height="1dp"
             android:layout_width="0dp" />
         <ImageView
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:id="@+id/take_picture"
             android:background="@drawable/icon_tokened"
             android:layout_height="@dimen/px_80"
-            android:scaleType="centerCrop"
-            android:layout_width="0dp" />
+            android:layout_width="@dimen/px_80" />
 
         <View
             android:layout_weight="1"
@@ -136,10 +135,10 @@
             android:layout_width="0dp" />
         <ImageView
             android:id="@+id/switch_camera"
-            android:background="@drawable/icon_reversal"
+            android:background="@drawable/icon_reveral"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/px_40"
-            android:layout_height="@dimen/px_65"
+            android:layout_height="@dimen/px_70"
             android:layout_width="@dimen/px_70"
             android:layout_marginStart="@dimen/px_40" />
         <View

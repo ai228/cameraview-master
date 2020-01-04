@@ -12,13 +12,14 @@
     <uses-permission android:name="android.intent.action.MEDIA_MOUNTED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+
 
     <application
         android:name=".DemoApplication"
@@ -28,6 +29,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <!--友盟-->
+        <meta-data android:value="5e0b2e08cb23d2114c000ed6" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
+
         <activity android:name=".ui.activity.TestKotlin" />
         <activity
             android:name=".ui.activity.SetUpActivity"
@@ -51,6 +57,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+
     </application>
 
 </manifest>

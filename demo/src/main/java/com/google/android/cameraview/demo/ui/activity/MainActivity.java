@@ -58,9 +58,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +73,8 @@ import com.google.android.cameraview.demo.ui.fragment.AspectRatioFragment;
 import com.google.android.cameraview.demo.util.ImageUtil;
 import com.google.android.cameraview.demo.util.urlhttp.CallBackUtil;
 import com.google.android.cameraview.demo.util.urlhttp.UrlHttpUtil;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -244,12 +248,13 @@ public class MainActivity extends AppCompatActivity implements
     public static final int LOCATION_CODE = 301;
     private LocationManager locationManager;
     private String locationProvider = null;
-    private String mLocality;
+    private String mLocality = "娄底";
     private Toast mToast;
     private List<String> list_keyword;
     private static int LIGHT_FLAG = 0;//0：自动；1：关闭；2：打开
     ImageView iv_light;
     private SharedPreferences mSharedPreferences;
+    private LinearLayout mLl_takened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String time= sdf.format( new Date());
         str_time = ""+time;
         project_time.setText(str_time); //更新时间
@@ -443,6 +448,44 @@ public class MainActivity extends AppCompatActivity implements
         //str_time = mSharedPreferences.getString("et_time","");
         //str_longitude_latitude = mSharedPreferences.getString("et_longitude_latitude","");
         iniData();
+        //友盟推送
+        PushAgent.getInstance(this).onAppStart();
+        mLl_takened = findViewById(R.id.ll_takened);
+        if (raio>2.0){
+            // 移动相机
+            RelativeLayout.LayoutParams  layoutParams =
+                    (RelativeLayout.LayoutParams) mCameraView.getLayoutParams();
+            layoutParams.bottomMargin = (int) (getResources().getDimension(R.dimen.px_190))/2;//将默认的距离底部20dp，改为0，这样底部区域全被listview填满。
+            mCameraView.setLayoutParams(layoutParams);
+
+            // 移动拍照布局
+            RelativeLayout.LayoutParams  layoutParams1 =
+                    (RelativeLayout.LayoutParams) mLl_takened.getLayoutParams();
+            layoutParams1.bottomMargin = (int) ((getResources().getDimension(R.dimen.px_190))/2);//将默认的距离底部20dp，改为0，这样底部区域全被listview填满。
+            mLl_takened.setLayoutParams(layoutParams1);
+        }else if (raio>1.9){
+            // 移动相机
+            RelativeLayout.LayoutParams  layoutParams =
+                    (RelativeLayout.LayoutParams) mCameraView.getLayoutParams();
+            layoutParams.bottomMargin = (int) (getResources().getDimension(R.dimen.px_150))/2;//将默认的距离底部20dp，改为0，这样底部区域全被listview填满。
+            mCameraView.setLayoutParams(layoutParams);
+            // 移动拍照布局
+            RelativeLayout.LayoutParams  layoutParams1 =
+                    (RelativeLayout.LayoutParams) mLl_takened.getLayoutParams();
+            layoutParams1.bottomMargin = (int) (getResources().getDimension(R.dimen.px_150))/2;//将默认的距离底部20dp，改为0，这样底部区域全被listview填满。
+            mLl_takened.setLayoutParams(layoutParams1);
+        }else if (raio>1.8){
+            // 移动相机
+            RelativeLayout.LayoutParams  layoutParams =
+                    (RelativeLayout.LayoutParams) mCameraView.getLayoutParams();
+            layoutParams.bottomMargin = (int) (getResources().getDimension(R.dimen.px_100))/2;//将默认的距离底部20dp，改为0，这样底部区域全被listview填满。
+            mCameraView.setLayoutParams(layoutParams);
+            // 移动拍照布局
+            RelativeLayout.LayoutParams  layoutParams1 =
+                    (RelativeLayout.LayoutParams) mLl_takened.getLayoutParams();
+            layoutParams1.bottomMargin = (int) (getResources().getDimension(R.dimen.px_100))/2;//将默认的距离底部20dp，改为0，这样底部区域全被listview填满。
+            mLl_takened.setLayoutParams(layoutParams1);
+        }
     }
 
     @Override
@@ -463,12 +506,15 @@ public class MainActivity extends AppCompatActivity implements
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA_PERMISSION);
         }
+        MobclickAgent.onResume(this);
+
     }
 
     @Override
     protected void onPause() {
         mCameraView.stop();
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -674,7 +720,7 @@ public class MainActivity extends AppCompatActivity implements
         String[] PERMISSIONS = {
                 "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.WRITE_EXTERNAL_STORAGE" };
-//检测是否有写的权限
+        //检测是否有写的权限
         int permission = ContextCompat.checkSelfPermission(this,
                 "android.permission.WRITE_EXTERNAL_STORAGE");
         if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -689,7 +735,7 @@ public class MainActivity extends AppCompatActivity implements
          */
             String fileName ;
             File file ;
-            if(Build.BRAND .equals("Xiaomi") ){ // 小米手机  ----> 工业相机改为了“DCIM”
+            if(Build.BRAND .equals("Xiaomi") ){ // 小米手机  ----> 电企通相机改为了“DCIM”
                 fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/Camera/"+format.format(new Date())+".JPEG" ;
             }else{ // Meizu 、Oppo
                 fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/"+format.format(new Date())+".JPEG" ;
@@ -738,7 +784,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }
-        File appDir = new File(Environment.getExternalStorageDirectory(), "工业相机");
+        File appDir = new File(Environment.getExternalStorageDirectory(), "电企通相机");
         if (!appDir.exists()) {
             appDir.mkdir();
         }
@@ -764,7 +810,7 @@ public class MainActivity extends AppCompatActivity implements
         //生成路径
         String root = Environment.getExternalStorageDirectory().getAbsolutePath();
 //        String root = getFilesDir().getAbsolutePath();
-        String dirName = "工业相机";
+        String dirName = "电企通相机";
         File appDir = new File(root, dirName);
         if (!appDir.exists()) {
             boolean mkdirs = appDir.mkdirs();
@@ -837,6 +883,7 @@ public class MainActivity extends AppCompatActivity implements
             str_content = data.getExtras().getString("et_content");
             str_weather = data.getExtras().getString("et_weather");
             str_location = data.getExtras().getString("et_location");
+            b_content = data.getExtras().getBoolean("b_content");
 
             if (!str_projectname.isEmpty()) {
                 tv_projectName.setText(str_projectname);
@@ -1217,9 +1264,14 @@ public class MainActivity extends AppCompatActivity implements
                             String str3 = ((Address) places.get(0)).getAddressLine(2) + "" ;
                             mLocality = ((Address) places.get(0)).getLocality();
                             str_location = (str1+str3).replace("null","");
+                            mLocality = ((Address) places.get(0)).getLocality();
+                            if (mLocality==null || mLocality==""){
+                                mLocality = "娄底";
+                            }
                         }
                         //不为空,显示地理位置经纬度
                         tv_projectAdd.setText(str_location);
+                        getNetWeather();
                     }
                     break;
                 }
@@ -1268,6 +1320,7 @@ public class MainActivity extends AppCompatActivity implements
                                 Message msg = new Message();
                                 msg.what = COMPLETED;
                                 handler.sendMessage(msg);
+                                Locale locale = tempAddress.getLocale();
                                 //更新UI等
                                 Looper.prepare();
                                 //Log.d(TAG, "Looper_addressLine: "+str_location);
@@ -1275,7 +1328,7 @@ public class MainActivity extends AppCompatActivity implements
                                 //tv_projectAdd.setText(addressLine);
                                 Looper.loop();
                                 geocoder.getFromLocation(location.getLatitude(),
-                                        location.getLongitude(), 5);
+                                        location.getLongitude(), 1);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1286,13 +1339,24 @@ public class MainActivity extends AppCompatActivity implements
                 if (places[0] != null && places[0].size() > 0) {
                     //一下的信息将会具体到某条街
                     //其中getAddressLine(0)表示国家，getAddressLine(1)表示精确到某个区，getAddressLine(2)表示精确到具体的街
-                    str_location = ((Address) places[0].get(0)).getAddressLine(0) + ""
-                            + ((Address) places[0].get(0)).getAddressLine(2);
+                    /*str_location = ((Address) places[0].get(0)).getAddressLine(0) + ""
+
+                            + ((Address) places[0].get(0)).getAddressLine(2);*/
+
+                    String addressLine1 = ((Address) places[0].get(0)).getAddressLine(0);
+                    String addressLine2 = ((Address) places[0].get(0)).getAddressLine(1);
+                    String addressLine3 = ((Address) places[0].get(0)).getAddressLine(2);
+                    String addressLine4 = ((Address) places[0].get(0)).getAddressLine(3);
+                    String addressLine5 = ((Address) places[0].get(0)).getAddressLine(4);
+                    Log.d(TAG, "onLocationChanged: "+addressLine1+","+addressLine2+","+addressLine3+","+addressLine4+","+addressLine5+",");
                     mLocality = ((Address) places[0].get(0)).getLocality();
+                    if (mLocality==null){
+                        mLocality = "娄底";
+                    }
                 }
                 //不为空,显示地理位置经纬度
                 tv_projectAdd.setText(str_location.replace("null",""));
-                UrlHttpUtil.get(HTTP_PRE + "娄底", new CallBackUtil.CallBackString() {
+                UrlHttpUtil.get(HTTP_PRE + mLocality, new CallBackUtil.CallBackString() {
                     @Override
                     public void onFailure(int code, String errorMessage) {
 
@@ -1366,12 +1430,24 @@ public class MainActivity extends AppCompatActivity implements
                                         //+ ((Address) places.get(0)).getAddressLine(1) + ","
                                         + ","
                                         + ((Address) places.get(0)).getAddressLine(2);
-                                mLocality = ((Address) places.get(0)).getLocality();
+
+                                String addressLine1 = ((Address) places.get(0)).getAddressLine(0);
+                                String addressLine2 = ((Address) places.get(0)).getAddressLine(1);
+                                String addressLine3 = ((Address) places.get(0)).getAddressLine(2);
+                                String addressLine4 = ((Address) places.get(0)).getAddressLine(3);
+                                String addressLine5 = ((Address) places.get(0)).getAddressLine(4);
+                                Log.d(TAG, "onLocationChanged: "+addressLine1+","+addressLine2+","+addressLine3+","+addressLine4+","+addressLine5+",");
                                 str_location = str_location.replace("null","");
+                                mLocality = ((Address) places.get(0)).getLocality();
+                                if (mLocality==null || mLocality==""){
+                                    mLocality = "娄底";
+                                }
+                                getNetWeather();
                             }
                             //不为空,显示地理位置经纬度
                             //Toast.makeText(MainActivity.this,  "city:"+placename, Toast.LENGTH_SHORT).show();
                             tv_projectAdd.setText(str_location);
+
                         }
                     }catch (SecurityException e){
                         e.printStackTrace();
@@ -1434,7 +1510,36 @@ public class MainActivity extends AppCompatActivity implements
         return (int) (dp * scale + 0.5f);
     }
 
+    private void getNetWeather(){
+        //不为空,显示地理位置经纬度
+        tv_projectAdd.setText(str_location.replace("null",""));
+        UrlHttpUtil.get(HTTP_PRE + mLocality, new CallBackUtil.CallBackString() {
+            @Override
+            public void onFailure(int code, String errorMessage) {
 
+            }
+
+            @Override
+            public void onResponse(String response) {
+                JSONObject  dataJson = null;
+                try {
+                    dataJson = new JSONObject(response);
+                    JSONObject  response1 = dataJson.getJSONObject("data");
+                    JSONArray data = response1.getJSONArray("forecast");
+                    JSONObject info=data.getJSONObject(0);
+                    String high=info.getString("high").substring(2);
+                    String low=info.getString("low").substring(2);
+                    String type=info.getString("type");
+                    String fengxiang=info.getString("fengxiang");
+                    str_weather = ""+type+","+fengxiang+","+low+" ~"+high;
+                    project_weather.setText(str_weather);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
 }
 
 

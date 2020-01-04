@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.google.android.cameraview.AspectRatio;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -145,4 +146,15 @@ public class AspectRatioFragment extends DialogFragment {
         void onAspectRatioSelected(@NonNull AspectRatio ratio);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("MainScreen"); //统计页面("MainScreen"为页面名称，可自定义)
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("MainScreen");
+    }
 }

@@ -38,6 +38,8 @@ import android.widget.Switch;
 import com.google.android.cameraview.demo.BackgoundcolorSeekBar;
 import com.google.android.cameraview.demo.FontsizeRaeSeekBar;
 import com.google.android.cameraview.demo.R;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -128,7 +130,7 @@ public class SetUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_up);
         sp = getSharedPreferences("camera", MODE_PRIVATE);
         mSpEdit = sp.edit();
-        b_voice_switch = sp.getBoolean("sh_voice_switch",false);
+        b_voice_switch = sp.getBoolean("sh_voice_switch",true);
         str_titileShow = sp.getString("str_titileShow","");
         str_content = sp.getString("et_content","");
         str_time = sp.getString("str_time","");
@@ -511,6 +513,7 @@ public class SetUpActivity extends AppCompatActivity {
                 intent.putExtra("sh_voice_switch",b_voice_switch);
                 intent.putExtra("b_abtain_switch",b_abtain_switch);
                 intent.putExtra("b_titileShow_switch",b_titileShow_switch);
+                intent.putExtra("b_content",b_content);
                 intent.putExtra("et_abtainCompany",et_abtainCompany.getText().toString().trim());
                 intent.putExtra("et_titileShow",et_titileShow.getText().toString().trim());
                 intent.putExtra("et_location",et_location.getText().toString().trim());
@@ -781,7 +784,7 @@ public class SetUpActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-
+        PushAgent.getInstance(this).onAppStart();
     }
 
     @Override
@@ -796,4 +799,15 @@ public class SetUpActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }

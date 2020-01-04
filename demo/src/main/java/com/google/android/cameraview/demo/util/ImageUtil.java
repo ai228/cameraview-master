@@ -61,6 +61,8 @@ public class ImageUtil {
 	private static Paint titileTextPaint;
     private static int sADD_line_contents;
 
+    private static int CANVAS_WIDTH = 3;
+    private static int CANVAS_HEIGHT = 5;
     /**
 	 * 图片压缩，按比例大小压缩方法
 	 */
@@ -301,7 +303,7 @@ public class ImageUtil {
 				String str = list_keywords.get(i);
                 if (str.startsWith("^_^")){// 以^_^开头的字符串说明是长字符串地址
                 	str = str.substring(3);
-                	if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
+                	/*if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
                         sADD_line_contents = 3;
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_middlie = str.substring(singleLine_textSize,singleLine_textSize*2);
@@ -309,7 +311,7 @@ public class ImageUtil {
 						canvas.drawText("位置信息："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
 						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_middlie, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
 						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
-					}else if (str.length()>singleLine_textSize){//地址大于12个字小于24个字的，显示为两行
+					}else*/ if (str.length()>singleLine_textSize){//地址大于12个字小于24个字的，显示为两行
                         sADD_line_contents = 2;
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_end = str.substring(singleLine_textSize);
@@ -320,22 +322,22 @@ public class ImageUtil {
 						canvas.drawText("位置信息："+str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
 					}
 				}else {//其他信息情况
-					canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+                    canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-(j))*h, paint);
                 }
             }// for,,,end
 			// 背景画布
-            if (sADD_line_contents == 3){
+           /* if (sADD_line_contents == 3){
                 canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 						paddingBottom-(list_keywords.size()+j-1)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
-						4*(bitmap.getWidth()/5), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
-            }else if (sADD_line_contents ==2){
+						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
+            }else*/ if (sADD_line_contents ==2){
                 canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 						paddingBottom-(list_keywords.size()+j)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
-						4*(bitmap.getWidth()/5), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
+						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
             }else{
                 canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 						paddingBottom-(list_keywords.size()+j+1)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
-						4*(bitmap.getWidth()/5), paddingBottom), mPaint);
+						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom), mPaint);
             }
 			Rect rect1;
 			if (b_titileShow_switch){
@@ -343,29 +345,29 @@ public class ImageUtil {
 					case 3:
 						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 								paddingBottom-(list_keywords.size()+j-1)*h,
-								4*(bitmap.getWidth()/5), paddingBottom-(list_keywords.size()+(j-2))*h), titilePaint);*/
+								CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom-(list_keywords.size()+(j-2))*h), titilePaint);*/
 						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
 								(int) paddingBottom-(list_keywords.size()+j-1)*h,
-								(int) 4*(bitmap.getWidth()/5),
+								(int) CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
 								(int) paddingBottom-(list_keywords.size()+(j-2))*h);
 						break;
 					case 2:
 						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 								paddingBottom-(list_keywords.size()+(j+1))*h,
-								4*(bitmap.getWidth()/5), paddingBottom-(list_keywords.size()+(j))*h), titilePaint);*/
+								CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom-(list_keywords.size()+(j))*h), titilePaint);*/
 						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
 								(int)paddingBottom-(list_keywords.size()+(j+1))*h,
-								(int) 4*(bitmap.getWidth()/5),
+								(int) CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
 								(int) paddingBottom-(list_keywords.size()+(j))*h);
 						break;
 					default:
 						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
 								(int) paddingBottom-(list_keywords.size()+j+2)*h,
-								(int) 4*(bitmap.getWidth()/5),
+								(int) CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
 								(int) paddingBottom-(list_keywords.size()+(j+1))*h);
 						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 								paddingBottom-(list_keywords.size()+j+2)*h,
-								4*(bitmap.getWidth()/5), paddingBottom-(list_keywords.size()+(j+1))*h), titilePaint);*/
+								CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom-(list_keywords.size()+(j+1))*h), titilePaint);*/
 						break;
 				}
 
@@ -379,11 +381,14 @@ public class ImageUtil {
 				Paint.FontMetrics fontMetrics = titileTextPaint.getFontMetrics();
 				float top = fontMetrics.top;//为基线到字体上边框的距离,即上图中的top
 				float bottom = fontMetrics.bottom;//为基线到字体下边框的距离,即上图中的bottom
-
-				float baseLineY = (rect1.centerY() - top*2 +bottom*2);//基线中间点的y轴计算公式
+				//计算baseline
 				titileTextPaint.setTextSize(paint.getTextSize());
-				canvas.drawText(str_titileShow, rect1.centerX(), baseLineY, titileTextPaint);
-				//canvas.drawText(""+str_titileShow, paddingLeft, paddingBottom-(list_keywords.size()+j)*h, titileTextPaint);
+				float distance=(bottom - top)/2 + bottom*4;
+				float baseline=rect1.centerY()+distance;
+				canvas.drawText(str_titileShow, rect1.centerX(), baseline, titileTextPaint);
+				/*float baseLineY = (rect1.centerY() - top*2 +bottom*4);//基线中间点的y轴计算公式
+				titileTextPaint.setTextSize(paint.getTextSize());
+				canvas.drawText(str_titileShow, rect1.centerX(), baseLineY, titileTextPaint);*/
 			}
         }// if,,,end
 		return bitmap;
