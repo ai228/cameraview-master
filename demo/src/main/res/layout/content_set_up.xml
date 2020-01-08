@@ -133,6 +133,54 @@
             android:layout_below="@id/rl_6"
             tools:ignore="MissingConstraints">
             <TextView
+                android:text="施工单位"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/px_text_30"
+                android:textColor="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/et_projectAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="@dimen/px_15"
+                />
+
+            <Switch
+                android:id="@+id/sh_watermark_projectadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:switchMinWidth="40dp"
+                android:layout_marginTop="20dp"
+                android:checked="true"
+                android:layout_marginRight="10dp"
+                android:thumb="@drawable/switch_custom_thumb_selector"
+                android:track="@drawable/switch_custom_track_selector"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+        <View
+            android:background="#117379"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_3"/>
+        <LinearLayout
+            android:background="@color/them_color_backgroundgreen"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_6"
+            tools:ignore="MissingConstraints">
+            <TextView
                 android:text="取证单位"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
@@ -143,7 +191,6 @@
                 android:layout_height="wrap_content"/>
 
             <EditText
-
                 android:id="@+id/et_abtainCompany"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,52 +212,7 @@
                 android:thumb="@drawable/switch_custom_thumb_selector"
                 android:track="@drawable/switch_custom_track_selector" />
         </LinearLayout>
-        <View
-            android:background="#117379"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_3"/>
-        <LinearLayout
-            android:id="@+id/ll_8"
-            android:background="@color/them_color_backgroundgreen"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rl_7"
-            tools:ignore="MissingConstraints">
-            <TextView
-                android:text="施工单位"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="10dp"
-                android:textSize="@dimen/px_text_30"
-                android:textColor="#ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
 
-            <EditText
-                android:id="@+id/et_projectAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:textColor="#ffffff"
-                android:layout_marginLeft="@dimen/px_15"
-                />
-            <Switch
-                android:id="@+id/sh_watermark_projectadd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:switchMinWidth="40dp"
-                android:layout_marginTop="20dp"
-                android:checked="true"
-                android:layout_marginRight="10dp"
-                android:thumb="@drawable/switch_custom_thumb_selector"
-                android:track="@drawable/switch_custom_track_selector"
-                android:layout_alignParentRight="true"/>
-        </LinearLayout>
 
         <include layout="@layout/dividing_line" />
 
@@ -384,7 +386,6 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_8"
             tools:ignore="MissingConstraints">
             <TextView
                 android:text="当前日期"

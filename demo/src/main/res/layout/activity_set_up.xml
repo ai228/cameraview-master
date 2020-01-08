@@ -33,20 +33,14 @@
             android:background="@color/them_color_backgroundgreen"
             android:layout_height="@dimen/px_120">
 
-            <TextView
+            <ImageView
                 android:id="@+id/txt_left_title"
-                android:layout_marginTop="@dimen/px_40"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:drawableLeft="@drawable/icon_left"
-                android:gravity="center"
-                android:singleLine="true"
-                android:padding="@dimen/px_20"
-                android:paddingTop="@dimen/px_10"
-                android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:visibility="visible"/>
+                android:layout_width="@dimen/px_25"
+                android:layout_height="@dimen/px_49"
+                android:layout_marginLeft="@dimen/px_30"
+                android:layout_marginTop="@dimen/px_58"
+                android:background="@drawable/icon_left"
+                android:padding="@dimen/px_10" />
 
             <TextView
                 android:id="@+id/txt_main_title"

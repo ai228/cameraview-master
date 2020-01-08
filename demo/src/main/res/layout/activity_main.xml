@@ -45,8 +45,8 @@
             android:layout_marginLeft="@dimen/px_10"
             android:layout_centerVertical="true"
             android:background="@drawable/icon_logo"
-            android:layout_width="@dimen/px_50"
-            android:layout_height="@dimen/px_42">
+            android:layout_width="@dimen/px_60"
+            android:layout_height="@dimen/px_40">
         </ImageView>
 
         <TextView
@@ -161,6 +161,8 @@
           android:layout_height="@dimen/px_60"
           android:layout_toEndOf="@id/my_name"
           android:layout_marginStart="@dimen/px_5" />-->
+
+
     <ImageView
         android:id="@+id/imview"
         android:visibility="gone"
@@ -168,6 +170,12 @@
         android:layout_height="200dp">
     </ImageView>
 
-
+    <TextView
+        android:id="@+id/tv_test_1"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="@dimen/px_300"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

@@ -19,9 +19,12 @@ package com.google.android.cameraview.demo;
 import static com.umeng.message.UmengDownloadResourceService.TAG;
 
 import android.app.Application;
+import android.app.Service;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.util.Log;
 
+import com.google.android.cameraview.demo.util.LocationService;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.umeng.analytics.MobclickAgent;
@@ -31,6 +34,8 @@ import com.umeng.message.PushAgent;
 
 public class DemoApplication extends Application {
     public static final String APP_ID = "ab8cf50692";
+    public LocationService locationService;
+    public Vibrator mVibrator;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -111,7 +116,7 @@ public class DemoApplication extends Application {
          * 设置组件化的Log开关
          * 参数: boolean 默认为false，如需查看LOG设置为true
          */
-        UMConfigure.setLogEnabled(true);
+        UMConfigure.setLogEnabled(false);
 
         /**
          * 注意: 即使您已经在AndroidManifest.xml中配置过appkey和channel值，也需要在App代码中调
@@ -140,6 +145,13 @@ public class DemoApplication extends Application {
                 Log.e(TAG,"注册失败：-------->  " + "s:" + s + ",s1:" + s1);
             }
         });
+
+
+        /***
+         * 百度地图初始化定位sdk，建议在Application中创建
+         */
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
     }
 
 }

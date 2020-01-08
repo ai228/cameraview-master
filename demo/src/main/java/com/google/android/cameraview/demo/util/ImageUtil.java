@@ -18,27 +18,44 @@ package com.google.android.cameraview.demo.util;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.ui.activity.MainActivity;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -168,6 +185,7 @@ public class ImageUtil {
 		return drawTextToBitmap(context,bitmap, list_keywords,b_titileShow_switch,str_titileShow, paint,paddingLeft,bitmap.getHeight() - paddingBottom,background_color_depth,background_color);
 	}
 
+	static boolean havAddress = false;
 	//图片上绘制文字
 	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap,
         List<String> list_keywords,boolean b_titileShow_switch,String str_titileShow,
@@ -299,9 +317,11 @@ public class ImageUtil {
 
             int j = 0;//变量j是多添加的行数，可以让
 			int singleLine_textSize = 12;//单行默认显示的字数
+
             for (int i=0;i<list_keywords.size();i++){
 				String str = list_keywords.get(i);
                 if (str.startsWith("^_^")){// 以^_^开头的字符串说明是长字符串地址
+					havAddress = true;
                 	str = str.substring(3);
                 	/*if (str.length()>singleLine_textSize*2){//地址大于24个字的，显示为三行
                         sADD_line_contents = 3;
@@ -315,17 +335,21 @@ public class ImageUtil {
                         sADD_line_contents = 2;
 						String substring_front= str.substring(0,singleLine_textSize);
 						String substring_end = str.substring(singleLine_textSize);
-						canvas.drawText("位置信息："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);j++;
-						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+						canvas.drawText("位置信息："+substring_front, paddingLeft, paddingBottom-(list_keywords.size()-i-j-1)*h, paint);j++;
+						canvas.drawText("\u3000\u3000\u3000\u3000\u3000"+substring_end, paddingLeft, paddingBottom-(list_keywords.size()-i-j-1)*h, paint);
 					}else {//其他情况一行显示
                         sADD_line_contents = 1;
-						canvas.drawText("位置信息："+str, paddingLeft, paddingBottom-(list_keywords.size()-i-j)*h, paint);
+						canvas.drawText("位置信息："+str, paddingLeft, paddingBottom-(list_keywords.size()-i-j-1)*h, paint);
 					}
 				}else {//其他信息情况
-                    canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-(j))*h, paint);
+                    canvas.drawText(str, paddingLeft, paddingBottom-(list_keywords.size()-i-(j+1))*h, paint);
                 }
             }// for,,,end
 			// 背景画布
+			if (havAddress){//有地址的时候画布最上方会多两行，进行修复
+				j = j - 1;
+			}
+			//paddingBottom = paddingBottom + h;
            /* if (sADD_line_contents == 3){
                 canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 						paddingBottom-(list_keywords.size()+j-1)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
@@ -333,11 +357,14 @@ public class ImageUtil {
             }else*/ if (sADD_line_contents ==2){
                 canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
 						paddingBottom-(list_keywords.size()+j)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
-						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom+(1*h)+20*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())), mPaint);
+						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
+						paddingBottom+(5*h) ), mPaint);
             }else{
-                canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
-						paddingBottom-(list_keywords.size()+j+1)*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
-						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom), mPaint);
+                canvas.drawRect(new RectF(
+                		paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						paddingBottom-(list_keywords.size()+(j+1))*h-0*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
+						CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
+						paddingBottom + (5*h)), mPaint);
             }
 			Rect rect1;
 			if (b_titileShow_switch){
@@ -347,7 +374,7 @@ public class ImageUtil {
 								paddingBottom-(list_keywords.size()+j-1)*h,
 								CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom-(list_keywords.size()+(j-2))*h), titilePaint);*/
 						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
-								(int) paddingBottom-(list_keywords.size()+j-1)*h,
+								(int) paddingBottom-(list_keywords.size()+j-1)*h-(h/2),
 								(int) CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
 								(int) paddingBottom-(list_keywords.size()+(j-2))*h);
 						break;
@@ -356,13 +383,13 @@ public class ImageUtil {
 								paddingBottom-(list_keywords.size()+(j+1))*h,
 								CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT), paddingBottom-(list_keywords.size()+(j))*h), titilePaint);*/
 						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
-								(int)paddingBottom-(list_keywords.size()+(j+1))*h,
+								(int)paddingBottom-(list_keywords.size()+(j+1))*h-(h/2),
 								(int) CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
 								(int) paddingBottom-(list_keywords.size()+(j))*h);
 						break;
 					default:
 						rect1 = new Rect((int) (paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight())),
-								(int) paddingBottom-(list_keywords.size()+j+2)*h,
+								(int) paddingBottom-(list_keywords.size()+j+2)*h-(h/2),
 								(int) CANVAS_WIDTH*(bitmap.getWidth()/CANVAS_HEIGHT),
 								(int) paddingBottom-(list_keywords.size()+(j+1))*h);
 						/*canvas.drawRect(new RectF(paddingLeft-10*MainActivity.getPxRatio(bitmap.getWidth(),bitmap.getHeight()),
@@ -383,7 +410,7 @@ public class ImageUtil {
 				float bottom = fontMetrics.bottom;//为基线到字体下边框的距离,即上图中的bottom
 				//计算baseline
 				titileTextPaint.setTextSize(paint.getTextSize());
-				float distance=(bottom - top)/2 + bottom*4;
+				float distance=(bottom - top)/2 + bottom*6;
 				float baseline=rect1.centerY()+distance;
 				canvas.drawText(str_titileShow, rect1.centerX(), baseline, titileTextPaint);
 				/*float baseLineY = (rect1.centerY() - top*2 +bottom*4);//基线中间点的y轴计算公式
@@ -391,6 +418,7 @@ public class ImageUtil {
 				canvas.drawText(str_titileShow, rect1.centerX(), baseLineY, titileTextPaint);*/
 			}
         }// if,,,end
+		havAddress = false;
 		return bitmap;
 	}
 
@@ -419,4 +447,147 @@ public class ImageUtil {
         Log.d(TAG, "dp2px: "+scale);
 		return (int) (dp * scale + 0.5f);
 	}
+
+	public static void saveImageToGallery_test( Activity context,Bitmap bitmap) {
+		//生成路径
+		String root = Environment.getExternalStorageDirectory().getAbsolutePath();
+		String dirName = "电企通相机";
+		File appDir = new File(root, dirName);
+		if (!appDir.exists()) {
+			boolean mkdirs = appDir.mkdirs();
+		}
+		//文件名为时间
+		long timeStamp = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+		String sd = sdf.format(new Date(timeStamp));
+		String fileName = sd + ".jpg";
+		//获取文件
+		File file = new File(appDir, fileName);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(file);
+			final FileOutputStream finalFos = fos;
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, finalFos);
+			Toast.makeText(context,"已保存", Toast.LENGTH_SHORT).show();
+			fos.flush();
+			//通知系统相册刷新
+			context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+					Uri.fromFile(new File(file.getPath()))));
+		} catch (FileNotFoundException e) {
+			saveImage(context,bitmap);
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private static void saveImage(Activity context, Bitmap bmp) {
+		if (Build.VERSION.SDK_INT >= 23) {
+			int REQUEST_CODE_CONTACT = 101;
+			String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+			//验证是否许可权限
+			for (String str : permissions) {
+				if (context.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
+					//申请权限
+					context.requestPermissions(permissions, REQUEST_CODE_CONTACT);
+				}
+			}
+		}
+		File appDir = new File(Environment.getExternalStorageDirectory(), "电企通相机");
+		if (!appDir.exists()) {
+			appDir.mkdir();
+		}
+		String fileName = System.currentTimeMillis() + ".jpg";
+		File file = new File(appDir, fileName);
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+			fos.flush();
+			fos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			saveImageToGallery(context,bmp);
+		}
+		// 发送广播，通知刷新图库的显示
+		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
+		//通知系统相册刷新
+		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+				Uri.fromFile(new File(file.getPath()))));
+	}
+
+	public static void saveImageToGallery(Activity contetnt,Bitmap bmp) {
+		String[] PERMISSIONS = {
+				"android.permission.READ_EXTERNAL_STORAGE",
+				"android.permission.WRITE_EXTERNAL_STORAGE" };
+		//检测是否有写的权限
+		int permission = ContextCompat.checkSelfPermission(contetnt,
+				"android.permission.WRITE_EXTERNAL_STORAGE");
+		if (permission != PackageManager.PERMISSION_GRANTED) {
+			// 没有写的权限，去申请写的权限，会弹出对话框
+			ActivityCompat.requestPermissions(contetnt, PERMISSIONS,1);
+		}
+		DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		/*
+		 * 保存文件，文件名为当前日期
+		 */
+		String fileName ;
+		File file ;
+		if(Build.BRAND .equals("Xiaomi") ){ // 小米手机  ----> 电企通相机改为了“DCIM”
+			fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/Camera/"+format.format(new Date())+".JPEG" ;
+		}else{ // Meizu 、Oppo
+			fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/"+format.format(new Date())+".JPEG" ;
+		}
+		file = new File(fileName);
+		if(file.exists()){
+			file.delete();
+		}
+		FileOutputStream out;
+		try{
+			out = new FileOutputStream(file);
+			// 格式为 JPEG，照相机拍出的图片为JPEG格式的，PNG格式的不能显示在相册中
+			if(bmp.compress(Bitmap.CompressFormat.JPEG, 90, out))
+			{
+				out.flush();
+				out.close();
+				// 插入图库
+				MediaStore.Images.Media.insertImage(contetnt.getContentResolver(), file.getAbsolutePath(), format.format(new Date())+".JPEG", null);
+			}
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		// 发送广播，通知刷新图库的显示
+		contetnt.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
+		//通知系统相册刷新
+		contetnt.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+				Uri.fromFile(new File(file.getPath()))));
+	}
+
+	public static Bitmap createDegree(Bitmap bitmap,int orientationDegree){
+		if(bitmap!=null){
+			Matrix m=new Matrix();
+			try{
+				m.setRotate(orientationDegree, bitmap.getWidth()/2, bitmap.getHeight()/2);//90就是我们需要选择的90度
+				Bitmap bmp2=Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+				bitmap.recycle();
+				bitmap=bmp2;
+			}catch(Exception ex){
+				System.out.print("创建图片失败！"+ex);
+			}
+		}
+		return bitmap;
+	}
+
 }

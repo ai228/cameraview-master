@@ -38,6 +38,7 @@ import android.widget.Switch;
 import com.google.android.cameraview.demo.BackgoundcolorSeekBar;
 import com.google.android.cameraview.demo.FontsizeRaeSeekBar;
 import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.view.NiceImageView;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
@@ -247,7 +248,7 @@ public class SetUpActivity extends AppCompatActivity {
         if (b_place_switch){
             sh_watermark_projectadd.setChecked(true);
         }else {
-            sh_abtain_switch.setChecked(false);
+            sh_watermark_projectadd.setChecked(false);
         }
         if (b_projectname_switch){
             sh_watermark_projectname.setChecked(true);
