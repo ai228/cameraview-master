@@ -176,7 +176,7 @@ public class ImageUtil {
 	/**
 	 * 绘制文字到左下方
 	 */
-	public static Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,
+	public Bitmap drawTextToLeftBottom(Context context, Bitmap bitmap,
             List<String> list_keywords,boolean b_titileShow_switch,String str_titileShow,
             Paint paint, float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
 		int width = bitmap.getWidth();
@@ -187,7 +187,7 @@ public class ImageUtil {
 
 	static boolean havAddress = false;
 	//图片上绘制文字
-	public static Bitmap drawTextToBitmap(Context context, Bitmap bitmap,
+	public  Bitmap drawTextToBitmap(Context context, Bitmap bitmap,
         List<String> list_keywords,boolean b_titileShow_switch,String str_titileShow,
         Paint paint,float paddingLeft, float paddingBottom,int background_color_depth,int background_color) {
 		Config bitmapConfig = bitmap.getConfig();
@@ -196,6 +196,7 @@ public class ImageUtil {
 		if (bitmapConfig == null) {
 			bitmapConfig = Config.ARGB_8888;
 		}
+
 		bitmap = bitmap.copy(bitmapConfig, true);
 		Canvas canvas = new Canvas(bitmap);
         Paint paint_title = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -448,132 +449,7 @@ public class ImageUtil {
 		return (int) (dp * scale + 0.5f);
 	}
 
-	public static void saveImageToGallery_test( Activity context,Bitmap bitmap) {
-		//生成路径
-		String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-		String dirName = "电企通相机";
-		File appDir = new File(root, dirName);
-		if (!appDir.exists()) {
-			boolean mkdirs = appDir.mkdirs();
-		}
-		//文件名为时间
-		long timeStamp = System.currentTimeMillis();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss");
-		String sd = sdf.format(new Date(timeStamp));
-		String fileName = sd + ".jpg";
-		//获取文件
-		File file = new File(appDir, fileName);
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(file);
-			final FileOutputStream finalFos = fos;
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, finalFos);
-			Toast.makeText(context,"已保存", Toast.LENGTH_SHORT).show();
-			fos.flush();
-			//通知系统相册刷新
-			context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-					Uri.fromFile(new File(file.getPath()))));
-		} catch (FileNotFoundException e) {
-			saveImage(context,bitmap);
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	private static void saveImage(Activity context, Bitmap bmp) {
-		if (Build.VERSION.SDK_INT >= 23) {
-			int REQUEST_CODE_CONTACT = 101;
-			String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-			//验证是否许可权限
-			for (String str : permissions) {
-				if (context.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
-					//申请权限
-					context.requestPermissions(permissions, REQUEST_CODE_CONTACT);
-				}
-			}
-		}
-		File appDir = new File(Environment.getExternalStorageDirectory(), "电企通相机");
-		if (!appDir.exists()) {
-			appDir.mkdir();
-		}
-		String fileName = System.currentTimeMillis() + ".jpg";
-		File file = new File(appDir, fileName);
-		try {
-			FileOutputStream fos = new FileOutputStream(file);
-			bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-			fos.flush();
-			fos.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			saveImageToGallery(context,bmp);
-		}
-		// 发送广播，通知刷新图库的显示
-		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
-		//通知系统相册刷新
-		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-				Uri.fromFile(new File(file.getPath()))));
-	}
 
-	public static void saveImageToGallery(Activity contetnt,Bitmap bmp) {
-		String[] PERMISSIONS = {
-				"android.permission.READ_EXTERNAL_STORAGE",
-				"android.permission.WRITE_EXTERNAL_STORAGE" };
-		//检测是否有写的权限
-		int permission = ContextCompat.checkSelfPermission(contetnt,
-				"android.permission.WRITE_EXTERNAL_STORAGE");
-		if (permission != PackageManager.PERMISSION_GRANTED) {
-			// 没有写的权限，去申请写的权限，会弹出对话框
-			ActivityCompat.requestPermissions(contetnt, PERMISSIONS,1);
-		}
-		DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-		/*
-		 * 保存文件，文件名为当前日期
-		 */
-		String fileName ;
-		File file ;
-		if(Build.BRAND .equals("Xiaomi") ){ // 小米手机  ----> 电企通相机改为了“DCIM”
-			fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/Camera/"+format.format(new Date())+".JPEG" ;
-		}else{ // Meizu 、Oppo
-			fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/"+format.format(new Date())+".JPEG" ;
-		}
-		file = new File(fileName);
-		if(file.exists()){
-			file.delete();
-		}
-		FileOutputStream out;
-		try{
-			out = new FileOutputStream(file);
-			// 格式为 JPEG，照相机拍出的图片为JPEG格式的，PNG格式的不能显示在相册中
-			if(bmp.compress(Bitmap.CompressFormat.JPEG, 90, out))
-			{
-				out.flush();
-				out.close();
-				// 插入图库
-				MediaStore.Images.Media.insertImage(contetnt.getContentResolver(), file.getAbsolutePath(), format.format(new Date())+".JPEG", null);
-			}
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		// 发送广播，通知刷新图库的显示
-		contetnt.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
-		//通知系统相册刷新
-		contetnt.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-				Uri.fromFile(new File(file.getPath()))));
-	}
 
 	public static Bitmap createDegree(Bitmap bitmap,int orientationDegree){
 		if(bitmap!=null){

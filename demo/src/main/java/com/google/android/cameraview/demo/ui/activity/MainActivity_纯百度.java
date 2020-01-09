@@ -18,7 +18,6 @@ package com.google.android.cameraview.demo.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,13 +28,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
@@ -45,6 +41,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,18 +73,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity_纯百度 extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback,
         AspectRatioFragment.Listener {
     private static final int COMPLETED = 0;
@@ -204,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements
                     if (mCameraView != null) {
                         if (b_voice_switch)
                             sp.play(music, 1, 1, 0, 0, 1);
-                        mToast = Toast.makeText(MainActivity.this,"图片保存中...",Toast.LENGTH_LONG);
+                        mToast = Toast.makeText(MainActivity_纯百度.this,"图片保存中...",Toast.LENGTH_LONG);
                         mToast.show();
                         mCameraView.takePicture();
                     }
@@ -228,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements
     private SharedPreferences mSharedPreferences;
     private LinearLayout mLl_takened;
     private TextView mTv_test;
-    ImageUtil imageUtil;
     public static boolean isMIUI() {
         String manufacturer = Build.MANUFACTURER;
         //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
@@ -313,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements
         mIm_setup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent setUpActivity = new Intent(MainActivity.this, SetUpActivity.class);
+                Intent setUpActivity = new Intent(MainActivity_纯百度.this, SetUpActivity.class);
                 setUpActivity.putExtra("str_projectname",str_projectname);
                 setUpActivity.putExtra("str_place",str_place);
                 setUpActivity.putExtra("str_weather",str_weather);
@@ -328,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivityForResult(setUpActivity, 0);
             }
         });
-        imageUtil = new ImageUtil();
+
         sp = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);//第一个参数为同时播放数据流的最大个数，第二数据流类型，第三为声音质量
         music = sp.load(this, R.raw.takend, 1); //把你的声音素材放到res/raw里，第2个参数即为资源文件，第3个为音乐的优先级
         list_keyword =  new ArrayList<String>();
@@ -343,19 +334,19 @@ public class MainActivity extends AppCompatActivity implements
                                 //设置为关闭
                                 LIGHT_FLAG = 1;
                                 mCameraView.setFlash(FLASH_OPTIONS[LIGHT_FLAG]);
-                                iv_light.setBackground(MainActivity.this.getResources().getDrawable(R.drawable.icon_light_close));
+                                iv_light.setBackground(MainActivity_纯百度.this.getResources().getDrawable(R.drawable.icon_light_close));
                                 break;
                             case 1://当闪光灯关闭状态
                                 //设置为打开
                                 LIGHT_FLAG = 2;
                                 mCameraView.setFlash(FLASH_OPTIONS[LIGHT_FLAG]);
-                                iv_light.setBackground(MainActivity.this.getResources().getDrawable(R.drawable.icon_light_open));
+                                iv_light.setBackground(MainActivity_纯百度.this.getResources().getDrawable(R.drawable.icon_light_open));
                                 break;
                             case 2://当闪光灯打开状态
                                 //设置为打开
                                 LIGHT_FLAG = 0;
                                 mCameraView.setFlash(FLASH_OPTIONS[LIGHT_FLAG]);
-                                iv_light.setBackground(MainActivity.this.getResources().getDrawable(R.drawable.icon_light));
+                                iv_light.setBackground(MainActivity_纯百度.this.getResources().getDrawable(R.drawable.icon_light));
                                 break;
                         }
                     }
@@ -463,12 +454,6 @@ public class MainActivity extends AppCompatActivity implements
         }else{
             isXiMi = false;
             Log.d(TAG, "onCreate: 不是 小米");
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //请求权限
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_CODE);
         }
     }
 
@@ -627,25 +612,14 @@ public class MainActivity extends AppCompatActivity implements
             if (!b_watermark_switch)
                 list_keyword.clear();
             if (isXiMi){
-                bitmap = imageUtil.createDegree(bitmap,90);
+                bitmap = ImageUtil.createDegree(bitmap,90);
             }
             float paddingBottom = 100 * getPxRatio(bitmap.getWidth(), bitmap.getHeight());
-            Bitmap toLeftBottom1 = imageUtil.drawTextToLeftBottom(MainActivity.this, bitmap,
-                    list_keyword,b_titileShow_switch,str_titileShow,
-                    paint,40*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),paddingBottom,background_color_depth_flag,background_color);
-            imageView.setImageBitmap(bitmap);
-            saveImageToGallery_test(toLeftBottom1);
-            if(bitmap != null && !bitmap.isRecycled()){
-                // 回收并且置为null
-                bitmap.recycle();
-                bitmap = null;
-            }
-            if(toLeftBottom1 != null && !toLeftBottom1.isRecycled()){
-                // 回收并且置为null
-                toLeftBottom1.recycle();
-                toLeftBottom1 = null;
-            }
-            System.gc();
+//            Bitmap toLeftBottom1 = ImageUtil.drawTextToLeftBottom(MainActivity_纯百度.this, bitmap,
+//                    list_keyword,b_titileShow_switch,str_titileShow,
+//                    paint,40*getPxRatio(bitmap.getWidth(),bitmap.getHeight()),paddingBottom,background_color_depth_flag,background_color);
+//            imageView.setImageBitmap(bitmap);
+            //ImageUtil.saveImageToGallery_test(MainActivity_纯百度.this,toLeftBottom1);
         }
     };
 
@@ -1169,9 +1143,9 @@ public class MainActivity extends AppCompatActivity implements
                     //str_weather = "无法获取有效定位依据导致定位失败";
                     //str_location = "无法获取有效定位依据导致定位失败";
                 }
-                //Log.d("AAAAAA",sb.toString());
-                //mTv_test.setText(sb+"sss");
-                //mTv_test.setMovementMethod(ScrollingMovementMethod.getInstance());
+                Log.d("AAAAAA",sb.toString());
+                mTv_test.setText(sb+"sss");
+                mTv_test.setMovementMethod(ScrollingMovementMethod.getInstance());
             }
         }
         @Override
@@ -1224,133 +1198,5 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-    }
-
-
-    private void saveImageToGallery_test(Bitmap bitmap) {
-        //生成路径
-        String root = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String dirName = "电企通相机";
-        File appDir = new File(root, dirName);
-        if (!appDir.exists()) {
-            boolean mkdirs = appDir.mkdirs();
-        }
-        //文件名为时间
-        long timeStamp = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HHmmss");
-        String sd = sdf.format(new Date(timeStamp));
-        String fileName = sd + ".jpg";
-        //获取文件
-        File file = new File(appDir, fileName);
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-            final FileOutputStream finalFos = fos;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, finalFos);
-            Toast.makeText(this,"已保存", Toast.LENGTH_SHORT).show();
-            fos.flush();
-            //通知系统相册刷新
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.fromFile(new File(file.getPath()))));
-        } catch (FileNotFoundException e) {
-            saveImage(bitmap);
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    private void saveImage(Bitmap bmp) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            int REQUEST_CODE_CONTACT = 101;
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            //验证是否许可权限
-            for (String str : permissions) {
-                if (checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
-                    //申请权限
-                    requestPermissions(permissions, REQUEST_CODE_CONTACT);
-                }
-            }
-        }
-        File appDir = new File(Environment.getExternalStorageDirectory(), "电企通相机");
-        if (!appDir.exists()) {
-            appDir.mkdir();
-        }
-        String fileName = System.currentTimeMillis() + ".jpg";
-        File file = new File(appDir, fileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            saveImageToGallery(bmp);
-        }
-        // 发送广播，通知刷新图库的显示
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
-        //通知系统相册刷新
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.fromFile(new File(file.getPath()))));
-    }
-
-    public void saveImageToGallery(Bitmap bmp) {
-        String[] PERMISSIONS = {
-                "android.permission.READ_EXTERNAL_STORAGE",
-                "android.permission.WRITE_EXTERNAL_STORAGE" };
-        //检测是否有写的权限
-        int permission = ContextCompat.checkSelfPermission(this,
-                "android.permission.WRITE_EXTERNAL_STORAGE");
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // 没有写的权限，去申请写的权限，会弹出对话框
-            ActivityCompat.requestPermissions(this, PERMISSIONS,1);
-        }
-        DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        /*
-         * 保存文件，文件名为当前日期
-         */
-        String fileName ;
-        File file ;
-        if(Build.BRAND .equals("Xiaomi") ){ // 小米手机  ----> 电企通相机改为了“DCIM”
-            fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/Camera/"+format.format(new Date())+".JPEG" ;
-        }else{ // Meizu 、Oppo
-            fileName = Environment.getExternalStorageDirectory().getPath()+"/DCIM/"+format.format(new Date())+".JPEG" ;
-        }
-        file = new File(fileName);
-        if(file.exists()){
-            file.delete();
-        }
-        FileOutputStream out;
-        try{
-            out = new FileOutputStream(file);
-            // 格式为 JPEG，照相机拍出的图片为JPEG格式的，PNG格式的不能显示在相册中
-            if(bmp.compress(Bitmap.CompressFormat.JPEG, 90, out))
-            {
-                out.flush();
-                out.close();
-                // 插入图库
-                MediaStore.Images.Media.insertImage(getContentResolver(), file.getAbsolutePath(), format.format(new Date())+".JPEG", null);
-            }
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        // 发送广播，通知刷新图库的显示
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
-        //通知系统相册刷新
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.fromFile(new File(file.getPath()))));
     }
 }
